@@ -22,6 +22,7 @@
 			buildInputs = with pkgs; [
 				python3
 				pyright
+				wkhtmltopdf
 
 			];
 			/* shellHook = ''
