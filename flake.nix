@@ -22,9 +22,21 @@
 			buildInputs = with pkgs; [
 				python3
 				pyright
-				wkhtmltopdf
+				# wkhtmltopdf
+				# libstdcxx5
+				chromium
+
 
 			];
+# 			multiPkgs = with pkgs; [
+# # libstdcxx5
+# 				gcc
+# 					libgcc
+# 					extra-cmake-modules
+# 					stdenv.cc.cc.lib
+# 			];
+			# LIBRARY_PATH= "/usr/lib:/usr/lib64/:$LIBRARY_PATH";
+			# LD_LIBRARY_PATH= "${pkgs.gcc.cc.lib}/lib:$LD_LIBRARY_PATH";
 			/* shellHook = ''
 			source .venv/bin/activate
 			zsh
