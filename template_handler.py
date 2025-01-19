@@ -15,6 +15,7 @@ class TemplateHandler:
     casting_time: TemplateString
     spell_range: TemplateString
     duration: TemplateString
+    description: TemplateString
     template: str
     screenshot_options: dict = {
             "html_file": 'build/template/outp.html',
@@ -50,12 +51,14 @@ class TemplateHandler:
         casting_time: str = "casting-time"
         spell_range: str = "range"
         duration: str = "duration"
+        description: str = "description"
 
     def populate_box_vars(self) -> None:
         components_list = self.find_elements_by_box(self.CONSTANT_BOX_NAMES.components)
         casting_time_list = self.find_elements_by_box(self.CONSTANT_BOX_NAMES.casting_time)
         spell_range_list = self.find_elements_by_box(self.CONSTANT_BOX_NAMES.spell_range)
         duration_list = self.find_elements_by_box(self.CONSTANT_BOX_NAMES.duration)
+        description_list = self.find_elements_by_box(self.CONSTANT_BOX_NAMES.description)
         for i in [components_list, casting_time_list, spell_range_list, duration_list]:
             if len(i) > 1:
                 print(f"More than 1 box of same type found in {self.template}!")
@@ -65,6 +68,7 @@ class TemplateHandler:
         self.casting_time=casting_time_list[0]
         self.spell_range=spell_range_list[0]
         self.duration=duration_list[0]
+        self.description=description_list[0]
 
     def find_elements_by_box(self, box_value: str) -> list:
         return self.soup.find_all(box= box_value);
