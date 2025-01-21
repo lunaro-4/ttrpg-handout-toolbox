@@ -71,12 +71,12 @@ class TemplateHandler:
         self.description=description_list[0]
 
     def find_elements_by_box(self, box_value: str) -> list:
-        return self.soup.find_all(box= box_value);
+        return self.soup.find_all(box= box_value)
 
     def prepare_build(self, template_name: str | None):
         if os.path.exists('build/template'):
-            shutil.rmtree('build/template')
-        shutil.copytree(f"templates/{template_name}", 'build/template')
+            os.remove('build/template')
+        os.symlink(f"../templates/{template_name}", 'build/template', True)
 
     def render_html(self):
         with open('build/template/outp.html', 'wb') as outp_file:
