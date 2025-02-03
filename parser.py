@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 
 DNDSU_URL = "https://dnd.su"
 
+
 def write_info(*spells_info):
     for spell in spells_info:
         pass
