@@ -37,10 +37,10 @@
 # 			];
 			# LIBRARY_PATH= "/usr/lib:/usr/lib64/:$LIBRARY_PATH";
 			# LD_LIBRARY_PATH= "${pkgs.gcc.cc.lib}/lib:$LD_LIBRARY_PATH";
-			/* shellHook = ''
+			shellHook = ''
 			source .venv/bin/activate
-			zsh
-			''; */
+			#zsh
+			'';
   };
 };
 }
