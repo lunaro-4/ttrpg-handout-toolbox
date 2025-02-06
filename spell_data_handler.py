@@ -8,17 +8,19 @@ REQUIRED_VALUES = ['components', 'casting-time', 'distance', 'duration', 'level'
 
 class Spell:
     def __init__(self, **kwargs) -> None:
-        self.name_ru: str | None = kwargs.get('name_ru')
-        self.name: str = kwargs['name']
-        self.components: dict[str, bool] = kwargs['components']
-        self.material_component: str | None = kwargs.get('material_component')
-        self.casting_time: str = kwargs['casting_time']
-        self.description: str = kwargs['description']
-        self.distance: int = kwargs['distance'] # 0 == cast on self
-        self.duration: str = kwargs['duration']
-        self.level: int = kwargs['level']
+        self.__name_ru: str | None = kwargs.get('name_ru')
+        self.__name: str = kwargs['name']
+        self.__components: dict[str, bool] = kwargs['components']
+        self.__material_component: str | None = kwargs.get('material_component')
+        self.__casting_time: str = kwargs['casting_time']
+        self.__description: str = kwargs['description']
+        self.__distance: int = kwargs['distance'] # 0 == cast on self
+        self.__duration: str = kwargs['duration']
+        self.__level: int = kwargs['level']
+        self.__is_ritual: bool = kwargs['is_ritual']
+        self.__requires_concentration: bool = kwargs['requires_concentration']
 
-        self.json: dict = kwargs
+        self.__json: dict = kwargs
 
     @classmethod
     def load_from_json(cls, spell_path: str = SPELL_DIRECTORY + '/' + DEFAULT_SPELL_NAME) -> typing.Self:
@@ -31,52 +33,46 @@ class Spell:
 
         return cls(**loaded_data)
 
-    def save_to_json(self, save_path: str) -> bool:
+    def save_to_json(self, save_path: str) -> None:
         with open(f'{save_path}.json', "w") as file:
-            file.write(json.dumps(self.json, indent=4).encode().decode("unicode-escape"))
+            file.write(json.dumps(self.__json, indent=4).encode().decode("unicode-escape"))
 
+    def get_name(self) -> str:
+        return self.__name
 
+    def get_name_ru(self) -> str:
+        if self.__name_ru:
+            return self.__name_ru
+        return self.__name
 
-        return True
+    def get_components(self) -> dict[str, bool]:
+        """ returns dictionary with keys: 'verbal', 'somatic', 'material'"""
+        return self.__components
 
-
-
-class SpellData:
-
-
-    spell_json: dict
-
-    def __init__(self, spell_name: str = DEFAULT_SPELL_NAME) -> None:
-        self.spell_json = self.load_spell_json(spell_name)
-        self.validate_spell_data()
-
-    def load_spell_json(self,spell_name: str) -> dict:
-        with open(f'{SPELL_DIRECTORY}/{spell_name}.json', 'r') as f:
-            return json.load(f)
-
-    def validate_spell_data(self) -> None:
-        keys_list = self.spell_json.keys()
-        for key in REQUIRED_VALUES:
-            if key not in keys_list:
-                print("JSON data is invalid!")
-                print(f"Information of {key} is not found!")
-                exit(1)
-
-    def get_spell_json(self) -> dict:
-        return self.spell_json
-
-    def get_components(self) -> str:
-        return self.spell_json['components']
     def get_casting_time(self) -> str:
-        return self.spell_json['casting-time']
-    def get_duration(self) -> str:
-        return self.spell_json['duration']
-    def get_distance(self) -> str:
-        return self.spell_json['distance']
-    def get_level(self) -> str:
-        return self.spell_json['level']
+        return self.__casting_time
+
     def get_description(self) -> str:
-        return self.spell_json['description']
+        return self.__description
+
+    def get_distance(self) -> int:
+        return self.__distance
+
+    def get_duration(self) -> str:
+        return self.__duration
+
+    def get_level(self) -> int:
+        return self.__level
+
+    def get_material_component(self) -> str | None:
+        return self.__material_component
+
+    def get_is_ritual(self) -> bool:
+        return self.__is_ritual
+
+    def get_requires_concentration(self) -> bool:
+        return self.__requires_concentration
+
 
 if __name__ == "__main__":
     sd = Spell.load_from_json('spell')
