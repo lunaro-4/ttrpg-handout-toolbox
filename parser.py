@@ -288,6 +288,7 @@ class DndSuParser(ParsingBoss):
                 "somatic": has_somatic,
                 "material": has_material
                 }
+        is_ritual = bool(int(spell_info['filter_ritual'][0])-1)
         new_spell_dict: dict = {
                 "name_ru": spell_name,
                 "name": spell_info['title_en'],
@@ -297,8 +298,8 @@ class DndSuParser(ParsingBoss):
                 "description": prs['description'],
                 "distance":prs['distance'],
                 "duration":prs['duration'],
-                "level":1,
-                "is_ritual":False,
+                "level":spell_info['level'],
+                "is_ritual":is_ritual,
                 "requires_concentration":prs['has_concentration']
                 }
 
@@ -321,17 +322,17 @@ class DndSuParser(ParsingBoss):
 if __name__ == "__main__":
     dsp = DndSuParser()
     # dsp.update_files("spells_raw_html")
-    dsp.populate_spells_list_from_file('spells.html', 3)
+    dsp.populate_spells_list_from_file('spells.html', 30)
     dsp.link_names_to_files("spells_raw_html")
     dsp.populate_soups_from_files()
-    # print(dsp.spells_raw[0])
+    # ic(dsp.spells_raw)
+    
     dsp.process_spells()
-    outp = ''
-    for spell in dsp.spells:
-        outp += str(spell)
-    print(outp)
-    # dsp.process_spells()
-    # print(dsp.get_spells()[0])
+    # outp = ''
+    # for spell in dsp.spells:
+    #     outp += str(spell)
+    # ic(outp)
+    # ic(dsp.get_spells())
 
     
     pass
