@@ -33,6 +33,8 @@ class Spell:
 
         return cls(**loaded_data)
 
+    def __str__(self) -> str :
+        return json.dumps(self.__json, indent=2).replace('\\/', '/').encode().decode("unicode-escape")
     def save_to_json(self, save_path: str) -> None:
         with open(f'{save_path}.json', "w") as file:
             file.write(json.dumps(self.__json, indent=4).encode().decode("unicode-escape"))
