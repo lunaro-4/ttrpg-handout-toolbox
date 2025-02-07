@@ -37,7 +37,7 @@ class ParsingBoss(ABC):
 
     def get_spells(self) -> list[Spell]:
         return self.spells
-    def save_spells(self, spell: Spell | None = None):
+    def save_spells(self, directory: str,  spell: Spell | None = None):
         spells_to_save: list[Spell] = []
         if spell:
             spells_to_save.append(spell)
@@ -45,7 +45,7 @@ class ParsingBoss(ABC):
             spells_to_save = self.spells
 
         for spell in self.spells:
-            spell.save_to_json("spell-data"+"/"+spell.get_name())
+            spell.save_to_json(directory+"/"+spell.get_file_name())
 
     @abstractmethod
     def process_spells(self) -> None:
@@ -321,18 +321,11 @@ class DndSuParser(ParsingBoss):
 
 if __name__ == "__main__":
     dsp = DndSuParser()
-    # dsp.update_files("spells_raw_html")
-    dsp.populate_spells_list_from_file('spells.html', 30)
+    dsp.populate_spells_list_from_file('spells.html')
     dsp.link_names_to_files("spells_raw_html")
     dsp.populate_soups_from_files()
-    # ic(dsp.spells_raw)
-    
     dsp.process_spells()
-    # outp = ''
-    # for spell in dsp.spells:
-    #     outp += str(spell)
-    # ic(outp)
-    # ic(dsp.get_spells())
+    dsp.save_spells("spell_data_from_dndsu")
 
     
     pass
