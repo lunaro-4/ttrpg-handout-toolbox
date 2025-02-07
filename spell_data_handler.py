@@ -35,9 +35,12 @@ class Spell:
 
     def __str__(self) -> str :
         return json.dumps(self.__json, indent=2).replace('\\/', '/').encode().decode("unicode-escape")
+
     def save_to_json(self, save_path: str) -> None:
         with open(f'{save_path}.json', "w") as file:
             file.write(json.dumps(self.__json, indent=4).encode().decode("unicode-escape"))
+    def get_file_name(self) -> str:
+        return self.__name.replace('/', '_').replace('\\', '_').replace(' ', '_')
 
     def get_name(self) -> str:
         return self.__name
@@ -77,5 +80,5 @@ class Spell:
 
 
 if __name__ == "__main__":
-    sd = Spell.load_from_json('spell')
+    sd = Spell.load_from_json('spell-data/Arcane_lock')
     sd.save_to_json('spell')
