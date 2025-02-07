@@ -1,5 +1,6 @@
 import re
 import sys
+from icecream import ic
 from typing import Any
 from html2image.html2image import os
 import requests
@@ -61,6 +62,10 @@ class DndSuParser(ParsingBoss):
         MINUTES = "мин".casefold()
         HOURS = "час".casefold()
         SECONDS = "сек".casefold()
+        DAYS_1 = "ден".casefold()
+        DAYS_2 = "дне".casefold()
+        DAYS_3 = "дня".casefold()
+        WEEK = "недел".casefold()
 
     class ParsedRawSpell:
         def __init__(self) -> None:
@@ -95,10 +100,13 @@ class DndSuParser(ParsingBoss):
         spells_dict = ast.literal_eval(spells_raw_refined)
         return spells_dict['cards']
         
-    def populate_spells_list_from_file(self, file_path: str) -> None:
+    def populate_spells_list_from_file(self, file_path: str, restrict_length: int = 0) -> None:
         with open(file_path, "r") as file:
             spells_html: str = file.read()
-        self.spells_raw = self.__get_spell_list_from_html(spells_html)
+        if restrict_length:
+            self.spells_raw = self.__get_spell_list_from_html(spells_html)[:restrict_length]
+        else:
+            self.spells_raw = self.__get_spell_list_from_html(spells_html)
 
     def populate_spells_list_from_url(self, url: str = DNDSU_URL+"/spells") -> None:
         spells_html = requests.get(url).text
@@ -155,7 +163,7 @@ class DndSuParser(ParsingBoss):
             return 0
         if raw_distance.find(st.ON_TOUCH) != -1:
             return 5
-        processed_distance: str =re.sub(r'\D', "" ,raw_distance) 
+        processed_distance: str = re.sub(r'\D', "" ,raw_distance) 
         if processed_distance.isnumeric():
             return int(processed_distance)
         return -1
@@ -176,7 +184,7 @@ class DndSuParser(ParsingBoss):
                     if i == 0 and child.text == "Компоненты:":
                         continue
                     elif i == 1:
-                        return child.text[child.text.find('(')+1:child.text.find(')')]
+                        return child.text[child.text.find('(')+1:child.text.find(')')].strip()
                     break
         return ""
 
@@ -214,7 +222,7 @@ class DndSuParser(ParsingBoss):
         if raw_duration.find(st.CONCENTRATION) != -1:
             has_concentration = True
 
-        raw_duration =  re.sub(r'.+? \d', "", raw_duration)
+        raw_duration =  re.sub(r'(.+?)(\d+ )', r"\2", raw_duration)
         duration_value_name: str = 'unknown'
         duration_multiplier: int = 1
 
@@ -228,6 +236,12 @@ class DndSuParser(ParsingBoss):
             duration_value_name = "s"
         elif raw_duration.find(st.INSTANT) != -1:
             return (0, has_concentration)
+        elif raw_duration.find(st.DAYS_1) + raw_duration.find(st.DAYS_2) + raw_duration.find(st.DAYS_3) != -3:
+            duration_value_name = 'd'
+            duration_multiplier = 3600*24
+        elif raw_duration.find(st.WEEK) != -1:
+            duration_value_name = 'w'
+            duration_multiplier = 3600 * 24 * 7
 
         duration_value: str = re.sub(r'\D', "" , raw_duration)
         if duration_value.isnumeric():
@@ -307,12 +321,15 @@ class DndSuParser(ParsingBoss):
 if __name__ == "__main__":
     dsp = DndSuParser()
     # dsp.update_files("spells_raw_html")
-    dsp.populate_spells_list_from_file('spells.html')
+    dsp.populate_spells_list_from_file('spells.html', 3)
     dsp.link_names_to_files("spells_raw_html")
     dsp.populate_soups_from_files()
     # print(dsp.spells_raw[0])
     dsp.process_spells()
-    print(dsp.spells[0])
+    outp = ''
+    for spell in dsp.spells:
+        outp += str(spell)
+    print(outp)
     # dsp.process_spells()
     # print(dsp.get_spells()[0])
 
