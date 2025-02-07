@@ -1,0 +1,18 @@
+{
+    "name_ru": "Небесные письмена",
+    "name": "Skywrite",
+    "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": false
+    },
+    "material_component": "В,",
+    "casting_time": "action",
+    "description": "В указанной вами части неба, которую вы можете видеть, возникает до десяти слов. Слова выглядят так, словно состоят из облаков, и остаются на одном месте, пока действует заклинание, после чего рассеиваются. Сильный ветер может рассеять их и досрочно закончить заклинание.
+",
+    "distance": -1,
+    "duration": 3600,
+    "level": "2",
+    "is_ritual": true,
+    "requires_concentration": true
+}

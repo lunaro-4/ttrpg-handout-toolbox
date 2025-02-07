@@ -1,0 +1,17 @@
+{
+    "name_ru": "Шквал",
+    "name": "Gust",
+    "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": false
+    },
+    "material_component": "",
+    "casting_time": "action",
+    "description": "",
+    "distance": 0,
+    "duration": -1,
+    "level": "Заговор",
+    "is_ritual": false,
+    "requires_concentration": false
+}

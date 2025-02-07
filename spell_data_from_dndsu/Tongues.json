@@ -1,0 +1,18 @@
+{
+    "name_ru": "Языки",
+    "name": "Tongues",
+    "components": {
+        "verbal": true,
+        "somatic": false,
+        "material": true
+    },
+    "material_component": "маленькая глиняная модель зиккурата",
+    "casting_time": "action",
+    "description": "Это заклинание дарует существу, которого вы касаетесь, способность понимать все языки, которые оно слышит. Более того, когда цель говорит, все существа, знающие хотя бы один язык, и слышащие цель, понимают, что она сказала.
+",
+    "distance": 5,
+    "duration": 3600,
+    "level": "3",
+    "is_ritual": false,
+    "requires_concentration": false
+}

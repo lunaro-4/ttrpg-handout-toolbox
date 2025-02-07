@@ -1,0 +1,18 @@
+{
+    "name_ru": "Защита от оружия",
+    "name": "Blade ward",
+    "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": false
+    },
+    "material_component": "В,",
+    "casting_time": "action",
+    "description": "Вы протягиваете руку и рисуете в воздухе ограждающий знак. Вы получаете до конца своего следующего хода сопротивление дробящему, колющему и рубящему урону, причиненному атаками оружием.
+",
+    "distance": 0,
+    "duration": 1,
+    "level": "Заговор",
+    "is_ritual": false,
+    "requires_concentration": false
+}

@@ -1,0 +1,18 @@
+{
+    "name_ru": "Защита от энергии",
+    "name": "Protection from energy",
+    "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": false
+    },
+    "material_component": "В,",
+    "casting_time": "action",
+    "description": "Пока заклинание активно, согласное существо, которого вы коснулись, получает сопротивление урону одного вида по вашему выбору: звук, кислота, огонь, холод или электричество.
+",
+    "distance": 5,
+    "duration": 3600,
+    "level": "3",
+    "is_ritual": false,
+    "requires_concentration": true
+}

@@ -1,0 +1,18 @@
+{
+    "name_ru": "Паук",
+    "name": "Spider climb",
+    "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": true
+    },
+    "material_component": "капля битума и паук",
+    "casting_time": "action",
+    "description": "Пока заклинание активно, одно согласное существо, которого вы касаетесь, получает возможность перемещаться вверх, вниз и вдоль вертикальных поверхностей, а также по потолкам, оставляя руки свободными. Цель также получает скорость лазания, равную своей скорости ходьбы.
+",
+    "distance": 5,
+    "duration": 3600,
+    "level": "2",
+    "is_ritual": false,
+    "requires_concentration": true
+}

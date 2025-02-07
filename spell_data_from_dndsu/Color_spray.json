@@ -1,0 +1,17 @@
+{
+    "name_ru": "Сверкающие брызги",
+    "name": "Color spray",
+    "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": true
+    },
+    "material_component": "",
+    "casting_time": "action",
+    "description": "",
+    "distance": 0,
+    "duration": -1,
+    "level": "1",
+    "is_ritual": false,
+    "requires_concentration": false
+}

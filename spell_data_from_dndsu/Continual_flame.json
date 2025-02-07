@@ -1,0 +1,18 @@
+{
+    "name_ru": "Вечный огонь",
+    "name": "Continual flame",
+    "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": true
+    },
+    "material_component": "порошок рубина на 50 зм, расходуемый заклинанием",
+    "casting_time": "action",
+    "description": "Из предмета, которого вы касаетесь, исходит пламя, эквивалентное по яркости пламени факела. Эффект выглядит как обычное пламя, но не создает тепла и не использует кислород. Вечный огонь можно накрыть или спрятать, но не потушить.
+",
+    "distance": 5,
+    "duration": -1,
+    "level": "2",
+    "is_ritual": false,
+    "requires_concentration": false
+}

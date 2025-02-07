@@ -1,0 +1,18 @@
+{
+    "name_ru": "Сопротивление",
+    "name": "Resistance",
+    "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": true
+    },
+    "material_component": "крошечный плащ",
+    "casting_time": "action",
+    "description": "Вы касаетесь одного согласного существа. Пока заклинание активно, цель может один раз бросить к4 и добавить выпавшее число к одному спасброску на свой выбор. Кость можно кидать до или после спасброска. После этого заклинание оканчивается.
+",
+    "distance": 5,
+    "duration": 60,
+    "level": "Заговор",
+    "is_ritual": false,
+    "requires_concentration": true
+}

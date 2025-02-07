@@ -1,0 +1,18 @@
+{
+    "name_ru": "Указание",
+    "name": "Guidance",
+    "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": false
+    },
+    "material_component": "В,",
+    "casting_time": "action",
+    "description": "Вы касаетесь одного согласного существа. Один раз, пока заклинание активно, цель может бросить 1к4 и добавить выпавшее число к одной проверке характеристики на свой выбор. Эту кость можно бросить до или после совершения проверки. После этого заклинание оканчивается.
+",
+    "distance": 5,
+    "duration": 60,
+    "level": "Заговор",
+    "is_ritual": false,
+    "requires_concentration": true
+}

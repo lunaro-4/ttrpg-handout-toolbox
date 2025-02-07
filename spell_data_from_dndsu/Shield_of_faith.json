@@ -1,0 +1,18 @@
+{
+    "name_ru": "Щит веры",
+    "name": "Shield of faith",
+    "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": true
+    },
+    "material_component": "небольшой пергамент со святыми письменами",
+    "casting_time": "bonus_action",
+    "description": "Появляется мерцающее поле, окружающее существо, выбранное вами в пределах дистанции, даруя ему на время длительности бонус +2 к КД.
+",
+    "distance": 60,
+    "duration": 600,
+    "level": "1",
+    "is_ritual": false,
+    "requires_concentration": true
+}

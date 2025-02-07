@@ -1,0 +1,18 @@
+{
+    "name_ru": "Заимствованные знания",
+    "name": "Borrowed Knowledge",
+    "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": true
+    },
+    "material_component": "книга стоимостью не менее 25 зм",
+    "casting_time": "action",
+    "description": "Вы черпаете знания у духов прошлого. Выберите один навык, которым вы не владеете. На время действия заклинания вы получаете владение выбранным навыком. Заклинание оканчивается раньше, если вы накладываете его снова.
+",
+    "distance": 0,
+    "duration": 3600,
+    "level": "2",
+    "is_ritual": false,
+    "requires_concentration": false
+}

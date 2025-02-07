@@ -1,0 +1,18 @@
+{
+    "name_ru": "Аура живучести",
+    "name": "Aura of vitality",
+    "components": {
+        "verbal": true,
+        "somatic": false,
+        "material": false
+    },
+    "material_component": "",
+    "casting_time": "action",
+    "description": "От вас исходит аура живительной энергии с радиусом 30 футов. Пока заклинание активно, аура перемещается вместе с вами, оставаясь с центром на вас. Вы можете бонусным действием восстанавливать одному любому существу в ауре (включая себя) 2к6 хитов.
+",
+    "distance": 0,
+    "duration": 60,
+    "level": "3",
+    "is_ritual": false,
+    "requires_concentration": true
+}

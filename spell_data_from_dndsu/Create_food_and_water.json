@@ -1,0 +1,18 @@
+{
+    "name_ru": "Сотворение пищи и воды",
+    "name": "Create food and water",
+    "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": false
+    },
+    "material_component": "В,",
+    "casting_time": "action",
+    "description": "Вы создаёте 45 фунтов еды и 30 галлонов (100 литров) воды на земле или в контейнере в пределах дистанции, которых достаточно для питания пятнадцати Гуманоидов или пятерых скакунов на 24 часа. Еда безвкусная, но сытная, и портится, если её не съесть за 24 часа. Вода чистая, и она не портится.
+",
+    "distance": 30,
+    "duration": 0,
+    "level": "3",
+    "is_ritual": false,
+    "requires_concentration": false
+}

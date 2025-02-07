@@ -1,0 +1,18 @@
+{
+    "name_ru": "Маяк надежды",
+    "name": "Beacon of hope",
+    "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": false
+    },
+    "material_component": "В,",
+    "casting_time": "action",
+    "description": "Это заклинание дарует надежду и живучесть. Выберите любое количество существ в пределах дистанции. Пока заклинание активно, все цели совершают спасброски Мудрости и спасброски от смерти с преимуществом, а также восстанавливают от любого лечения максимально возможное количество хитов.
+",
+    "distance": 30,
+    "duration": 60,
+    "level": "3",
+    "is_ritual": false,
+    "requires_concentration": true
+}

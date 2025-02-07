@@ -1,0 +1,18 @@
+{
+    "name_ru": "Меткий удар",
+    "name": "True strike",
+    "components": {
+        "verbal": false,
+        "somatic": true,
+        "material": false
+    },
+    "material_component": "",
+    "casting_time": "action",
+    "description": "Вы вытягиваете руку и указываете пальцем на цель, находящуюся в пределах дистанции. Ваша магия даёт краткое понимание защиты цели. В своем следующем ходу вы совершаете с преимуществом первый бросок атаки по цели, при условии, что заклинание к тому моменту не окончится.
+",
+    "distance": 30,
+    "duration": 1,
+    "level": "Заговор",
+    "is_ritual": false,
+    "requires_concentration": true
+}
