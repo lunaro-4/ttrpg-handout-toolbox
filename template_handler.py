@@ -12,8 +12,8 @@ DEFAULT_SIZE = (408, 700)
 
 class TemplateHandler:
     screenshot_options: dict = {
-            "html_file": 'build/template/outp.html',
-            "css_file": 'build/template/style.css',
+            "html_file": 'build/html_outp/outp.html',
+
             "save_as": 'outp.png',
             "size": (408, 700)
             }
@@ -64,9 +64,11 @@ class TemplateHandler:
     def render(self, size: tuple[int, int] = DEFAULT_SIZE, file_path: str = DEFAULT_OUTP_NAME) -> None:
         self.screenshot_options['size'] = size
         self.screenshot_options['save_as'] = file_path
-        self.prepare_build(self.template)
+        self.clean_build()
+        self.generate_symlinks(self.template)
         self.render_html()
         self.render_image()
+        self.clean_build()
 
     def get_soup(self):
         with open(f'templates/{self.template}/index.html') as html_file:
@@ -100,16 +102,29 @@ class TemplateHandler:
             return found_boxes[0]
         return None
 
-    def prepare_build(self, template_name: str | None):
-        if os.path.exists('build/template'):
-            os.remove('build/template')
-        os.symlink(f"../templates/{template_name}", 'build/template', True)
-        if not os.path.exists('build/src'):
-            os.symlink('template/src', 'build/template', True)
+    def clean_build(self):
+        # if os.path.exists('build/template'):
+        #     os.remove('build/template')
+        # os.symlink(f"../templates/{template_name}", 'build/template', True)
+        # if not os.path.exists('build/src'):
+        #     os.symlink('template/src', 'build/src', True)
+        build_dir: str = 'build'
+        files: list[str] = os.listdir(build_dir)
+        for file in files:
+            if os.path.islink(build_dir+ '/' + file):
+                os.remove(build_dir+ '/'+file)
+        if not os.path.exists(f'{build_dir}/html_outp'):
+            os.mkdir(f'{build_dir}/html_outp')
 
     def render_html(self):
-        with open('build/template/outp.html', 'wb') as outp_file:
+        with open('build/html_outp/outp.html', 'wb') as outp_file:
             outp_file.write(self.soup.encode())
+
+    def generate_symlinks(self, template_name: str) -> None:
+        files: list[str] = os.listdir('templates/'+template_name)
+        for file in files:
+            os.symlink(f"../templates/{template_name}/{file}", f'build/{file}', os.path.isdir(f'templates/{template_name}/{file}'))
+                       
 
     def render_image(self):
         # render_options = {
@@ -132,11 +147,12 @@ class TemplateHandler:
         file_path: str = self.screenshot_options['save_as']
         file_name = file_path[file_path.find('/')+1:]
         self.screenshot_options['save_as'] = file_name
-        # self.screenshot_options['css_file'] = 'build/template/style_1.css'
-        build_dir_path = os.path.realpath('build/template')
-        file_list: list[str] = recursive_find_files(os.path.realpath(build_dir_path))
+        # build_dir_path = os.path.realpath('build/template')
+        # file_list: list[str] = recursive_find_files(os.path.realpath(build_dir_path))
 
         hti = Html2Image(temp_path='build')
+        # hti = Html2Image(temp_path='build/template')
+
         # hti: Html2Image = Html2Image()
         # for file in file_list:
         #     dot_index: int = ''.join(reversed(file)).find('.')
