@@ -108,6 +108,7 @@ body{ margin:0;
 	padding:10px 0;
 } 
 #name-column{
+	display:flex;
 	flex-direction:column;
 	padding:0px;
 	margin:0px;
