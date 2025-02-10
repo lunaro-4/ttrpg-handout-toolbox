@@ -13,9 +13,6 @@ DEFAULT_SIZE = (408, 700)
 class TemplateHandler:
     screenshot_options: dict = {
             "html_file": 'build/html_outp/outp.html',
-
-            "save_as": 'outp.png',
-            "size": (408, 700)
             }
     class CONSTANT_BOX_NAMES:
         components: str = "components"
@@ -103,11 +100,6 @@ class TemplateHandler:
         return None
 
     def clean_build(self):
-        # if os.path.exists('build/template'):
-        #     os.remove('build/template')
-        # os.symlink(f"../templates/{template_name}", 'build/template', True)
-        # if not os.path.exists('build/src'):
-        #     os.symlink('template/src', 'build/src', True)
         build_dir: str = 'build'
         files: list[str] = os.listdir(build_dir)
         for file in files:
@@ -127,11 +119,6 @@ class TemplateHandler:
                        
 
     def render_image(self):
-        # render_options = {
-        #         'enable-local-file-access': None,
-        #         'width':408,
-        #         'height':700,
-        #         }
         def recursive_find_files(directory_path: str) -> list[str] :
             file_list: list[str] = []
             files = os.listdir(directory_path)
@@ -147,25 +134,7 @@ class TemplateHandler:
         file_path: str = self.screenshot_options['save_as']
         file_name = file_path[file_path.find('/')+1:]
         self.screenshot_options['save_as'] = file_name
-        # build_dir_path = os.path.realpath('build/template')
-        # file_list: list[str] = recursive_find_files(os.path.realpath(build_dir_path))
-
         hti = Html2Image(temp_path='build')
-        # hti = Html2Image(temp_path='build/template')
-
-        # hti: Html2Image = Html2Image()
-        # for file in file_list:
-        #     dot_index: int = ''.join(reversed(file)).find('.')
-        #     if dot_index == -1:
-        #         continue
-        #     file_extension: str = file[-dot_index-1:]
-        #     if file_extension == ".svg" or file_extension == ".png":
-        #         hti.load_file(file)
-            
-        # hti.load_file(os.path.realpath('/home/lunaro/git/dnd-card-spell-template/templates/basic-template/src/ritual.png'))
-
-
-
         hti.screenshot(**self.screenshot_options)
         shutil.move(file_name, file_path)
 
