@@ -7,11 +7,11 @@
         "material": false
     },
     "material_component": "В,",
-    "casting_time": "action",
+    "casting_time": 4,
     "description": "Вы касаетесь живого существа, у которого 0 хитов. Оно становится стабилизированным. Это заклинание не оказывает никакого эффекта на Нежить и Конструктов.
 ",
     "distance": 5,
-    "duration": 0,
+    "duration": -1,
     "level": "Заговор",
     "is_ritual": false,
     "requires_concentration": false

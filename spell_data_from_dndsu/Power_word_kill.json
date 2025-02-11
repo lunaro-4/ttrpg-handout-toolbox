@@ -7,11 +7,11 @@
         "material": false
     },
     "material_component": "",
-    "casting_time": "action",
+    "casting_time": 4,
     "description": "Вы произносите слово силы, заставляющее существо, которое вы видите в пределах дистанции, мгновенно умереть. Если у выбранного вами существа 100 хитов или меньше, оно умирает. В противном случае это заклинание не оказывает никакого эффекта.
 ",
     "distance": 60,
-    "duration": 0,
+    "duration": -1,
     "level": "9",
     "is_ritual": false,
     "requires_concentration": false

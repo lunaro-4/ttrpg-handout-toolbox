@@ -7,7 +7,7 @@
         "material": false
     },
     "material_component": "В,",
-    "casting_time": "minute",
+    "casting_time": 60,
     "description": "Вы касаетесь согласного существа. На время действия заклинания цель может прибавлять 1к8 к своим броскам инициативы.
 ",
     "distance": 5,

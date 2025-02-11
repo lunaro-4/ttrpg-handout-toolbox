@@ -7,11 +7,11 @@
         "material": false
     },
     "material_component": "В,",
-    "casting_time": "action",
+    "casting_time": 4,
     "description": "Вы касаетесь существа и можете окончить одну болезнь или одно состояние, в котором оно находится. Этим состоянием может быть глухота, отравление, паралич или слепота.
 ",
     "distance": 5,
-    "duration": 0,
+    "duration": -1,
     "level": "2",
     "is_ritual": false,
     "requires_concentration": false

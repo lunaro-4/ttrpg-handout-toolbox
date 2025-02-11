@@ -7,11 +7,11 @@
         "material": false
     },
     "material_component": "В,",
-    "casting_time": "reaction",
+    "casting_time": 0,
     "description": "Появляется невидимый барьер из магической силы, что вас защищает. До начала своего следующего хода вы получаете бонус +5 к КД, и в том числе против той атаки, что вызвала срабатывание заклинания. Кроме того, вы не получаете урон от заклинания волшебная стрела [magic missile].
 ",
     "distance": 0,
-    "duration": 1,
+    "duration": -1,
     "level": "1",
     "is_ritual": false,
     "requires_concentration": false

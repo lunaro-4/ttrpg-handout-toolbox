@@ -7,11 +7,11 @@
         "material": false
     },
     "material_component": "",
-    "casting_time": "bonus_action",
+    "casting_time": 2,
     "description": "Окутавшись серебристым туманом, вы телепортируетесь на расстояние до 30 футов в свободное пространство, видимое вами.
 ",
     "distance": 0,
-    "duration": 0,
+    "duration": -1,
     "level": "2",
     "is_ritual": false,
     "requires_concentration": false

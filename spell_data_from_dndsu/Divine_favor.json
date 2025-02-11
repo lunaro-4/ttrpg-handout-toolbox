@@ -7,7 +7,7 @@
         "material": false
     },
     "material_component": "В,",
-    "casting_time": "bonus_action",
+    "casting_time": 2,
     "description": "Ваша молитва наполняет вас божественной энергией. Пока заклинание активно, ваши атаки оружием причиняют при попадании дополнительный урон 1к4 излучением.
 ",
     "distance": 0,

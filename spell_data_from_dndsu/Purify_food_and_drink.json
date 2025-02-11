@@ -7,11 +7,11 @@
         "material": false
     },
     "material_component": "В,",
-    "casting_time": "action",
+    "casting_time": 4,
     "description": "Вся немагическая еда и питьё в пределах сферы с радиусом 5 футов с центром на точке, выбранной вами в пределах дистанции, очищается и избавляется от ядов и болезней.
 ",
     "distance": 10,
-    "duration": 0,
+    "duration": -1,
     "level": "1",
     "is_ritual": true,
     "requires_concentration": false

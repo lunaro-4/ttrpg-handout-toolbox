@@ -7,11 +7,11 @@
         "material": true
     },
     "material_component": "кусочек меха ищейки",
-    "casting_time": "action",
+    "casting_time": 4,
     "description": "Назовите определённый вид Зверя или растения. Сконцентрировавшись на голосе природы в окружении, вы узнаёте направление и расстояние до ближайшего существа или растения этого вида в пределах 5 миль, если они вообще есть.
 ",
     "distance": 0,
-    "duration": 0,
+    "duration": -1,
     "level": "2",
     "is_ritual": true,
     "requires_concentration": false
