@@ -47,6 +47,11 @@ class ParsingBoss(ABC):
         for spell in self.spells:
             spell.save_to_json(directory+"/"+spell.get_file_name())
 
+    def render_spell(self,spell_info: dict) -> Spell:
+        """ Place to do convertions, in case 'Spell' vaules will change """
+        spell_data = spell_info
+        return Spell(**spell_data)
+
     @abstractmethod
     def process_spells(self) -> None:
         pass
@@ -66,6 +71,9 @@ class DndSuParser(ParsingBoss):
         DAYS_2 = "дне".casefold()
         DAYS_3 = "дня".casefold()
         WEEK = "недел".casefold()
+        ACTION = "действ".casefold()
+        BONUS_ACTION = "бонусн".casefold()
+        REACTION = "реакц".casefold()
 
     class ParsedRawSpell:
         def __init__(self) -> None:
@@ -74,7 +82,8 @@ class DndSuParser(ParsingBoss):
                     "material_component": "",
                     "distance": -1,
                     "duration": -1,
-                    "has_concentration": False
+                    "has_concentration": False,
+                    "casting_time": -1
                     }
         def __getitem__(self, name: str, /) -> Any:
             return self.__raw_dict[name]
@@ -200,6 +209,39 @@ class DndSuParser(ParsingBoss):
                     break
         return 0
 
+    def __parse_duaration_multiplyer(self, raw_duration: str) -> int:
+        st = DndSuParser.StaticTranslations()
+        if raw_duration.find(st.HOURS) != -1:
+            duration_value_name = 'h'
+            return 3600
+        elif raw_duration.find(st.MINUTES) != -1:
+            duration_value_name = "m"
+            return 60
+        elif raw_duration.find(st.SECONDS) != -1:
+            duration_value_name = "s"
+        elif raw_duration.find(st.INSTANT) != -1:
+            return 0
+        elif raw_duration.find(st.DAYS_1) + raw_duration.find(st.DAYS_2) + raw_duration.find(st.DAYS_3) != -3:
+            duration_value_name = 'd'
+            return 3600*24
+        elif raw_duration.find(st.WEEK) != -1:
+            duration_value_name = 'w'
+            return 3600 * 24 * 7
+        return -1
+
+    def __clean_duration(self, raw_duration: str) -> int:
+        raw_duration =  re.sub(r'(.+?)(\d+ )', r"\2", raw_duration)
+
+        duration_multiplier: int = self.__parse_duaration_multiplyer(raw_duration)
+        if duration_multiplier == -1:
+            return -1
+
+        duration_value: str = re.sub(r'\D', "" , raw_duration)
+        if duration_value.isnumeric():
+            return int(duration_value)*duration_multiplier
+        return -1
+
+
     def __get_duration_and_concentration_from_soup(self, soup: BeautifulSoup) -> tuple[int, bool]:
         """ Returns values in format: 'duration_value, value_name, requires_concentration' """
         lists = soup.find_all(name="li")
@@ -215,6 +257,7 @@ class DndSuParser(ParsingBoss):
         if not raw_duration:
             return (-1, False)
 
+
         st = DndSuParser.StaticTranslations()
         raw_duration = raw_duration.casefold()
         
@@ -222,36 +265,39 @@ class DndSuParser(ParsingBoss):
         if raw_duration.find(st.CONCENTRATION) != -1:
             has_concentration = True
 
-        raw_duration =  re.sub(r'(.+?)(\d+ )', r"\2", raw_duration)
-        duration_value_name: str = 'unknown'
-        duration_multiplier: int = 1
+        duration_value = self.__clean_duration(raw_duration)
+        return(duration_value, has_concentration)
 
-        if raw_duration.find(st.HOURS) != -1:
-            duration_value_name = 'h'
-            duration_multiplier = 3600
-        elif raw_duration.find(st.MINUTES) != -1:
-            duration_value_name = "m"
-            duration_multiplier = 60
-        elif raw_duration.find(st.SECONDS) != -1:
-            duration_value_name = "s"
-        elif raw_duration.find(st.INSTANT) != -1:
-            return (0, has_concentration)
-        elif raw_duration.find(st.DAYS_1) + raw_duration.find(st.DAYS_2) + raw_duration.find(st.DAYS_3) != -3:
-            duration_value_name = 'd'
-            duration_multiplier = 3600*24
-        elif raw_duration.find(st.WEEK) != -1:
-            duration_value_name = 'w'
-            duration_multiplier = 3600 * 24 * 7
 
-        duration_value: str = re.sub(r'\D', "" , raw_duration)
-        if duration_value.isnumeric():
-            return (int(duration_value)*duration_multiplier, has_concentration)
-        return(-1, has_concentration)
 
+    def __get_casting_time_from_soup(self, soup: BeautifulSoup) -> int:
+        lists = soup.find_all(name="li")
+        raw_casting_time: str = ""
+        for li in lists:
+            if li.children:
+                for i, child in enumerate(li.children):
+                    if i == 0 and child.text == "Время накладывания:":
+                        continue
+                    elif i == 1:
+                        raw_casting_time = child.text
+                    break
+        if not raw_casting_time:
+            return -1
+
+        st = DndSuParser.StaticTranslations()
+
+        raw_casting_time =raw_casting_time.casefold()
+
+        if raw_casting_time.find(st.BONUS_ACTION) != -1:
+            return Spell.DURATION_CONSTATNS.BONUS_ACTION
+        if raw_casting_time.find(st.ACTION) != -1:
+            return Spell.DURATION_CONSTATNS.ACTION
+        if raw_casting_time.find(st.REACTION) != -1:
+            return Spell.DURATION_CONSTATNS.REACTION
+
+        return self.__clean_duration(raw_casting_time)
 
         
-
-
 
 
 
@@ -267,15 +313,17 @@ class DndSuParser(ParsingBoss):
             mater_component = self.__get_material_component_from_soup(soup)
             distance = self.__get_distance_from_soup(soup)
             (duration, has_concentration) = self.__get_duration_and_concentration_from_soup(soup)
+            casting_time = self.__get_casting_time_from_soup(soup)
             prs['description'] = desc
             prs['material_component'] = mater_component
             prs['distance'] = distance
             prs['duration'] = duration
             prs['has_concentration'] = has_concentration
+            prs['casting_time'] = casting_time
             self.names_to_values[name] = prs
 
 
-    def conventialize_spell(self,spell_info: dict) -> Spell:
+    def __refactor_parsed(self, spell_info: dict) -> Spell:
         spell_name: str = self.__get_spell_name(spell_info)
         components_raw: str = spell_info['filter_components']
         has_verbal: bool = int(components_raw[0]) == 1
@@ -294,7 +342,7 @@ class DndSuParser(ParsingBoss):
                 "name": spell_info['title_en'],
                 "components": components_to_bool,
                 "material_component": prs['material_component'],
-                "casting_time": spell_info['filter_casttime'][0],
+                "casting_time": prs['casting_time'],
                 "description": prs['description'],
                 "distance":prs['distance'],
                 "duration":prs['duration'],
@@ -302,13 +350,13 @@ class DndSuParser(ParsingBoss):
                 "is_ritual":is_ritual,
                 "requires_concentration":prs['has_concentration']
                 }
-
         return Spell(**new_spell_dict)
+
 
         
     def translate_spells(self):
         for spell in self.spells_raw:
-            self.spells.append(self.conventialize_spell(spell))
+            self.spells.append(self.__refactor_parsed(spell))
 
     def process_spells(self) -> None:
         self.__get_data_from_soups()
@@ -317,6 +365,13 @@ class DndSuParser(ParsingBoss):
         pass
 
 
+def print_spells(spells: list) -> None:
+    delimiter = '\n====================\n'
+    print_string: str = ''
+    for spell in spells:
+        print_string += str(spell)
+        print_string += delimiter
+    print(print_string)
 
 
 if __name__ == "__main__":
@@ -325,7 +380,9 @@ if __name__ == "__main__":
     dsp.link_names_to_files("spells_raw_html")
     dsp.populate_soups_from_files()
     dsp.process_spells()
+    # print_spells(dsp.spells)
     dsp.save_spells("spell_data_from_dndsu")
+    
 
     
     pass
