@@ -107,9 +107,11 @@ class DndSuParser(ParsingBoss):
         spells_raw = spells_raw_encoded.replace('\\/', '/').encode().decode("unicode-escape")
         spells_raw_refined = spells_raw[spells_raw.find('{'):-1]
         spells_dict = ast.literal_eval(spells_raw_refined)
+        print(f'Found {len(spells_dict)} spells ')
         return spells_dict['cards']
         
     def populate_spells_list_from_file(self, file_path: str, restrict_length: int = 0) -> None:
+        print('Parsing spell list from ', file_path)
         with open(file_path, "r") as file:
             spells_html: str = file.read()
         if restrict_length:
@@ -154,6 +156,7 @@ class DndSuParser(ParsingBoss):
         for spell in self.spells_raw:
             spell_name: str = self.__get_spell_name(spell)
             file_name = self.__get_spell_file_name(spell_name, files_directory)
+            print(f'Linking {spell_name} to {file_name}')
             if not os.path.isfile(file_name):
                 print(f"ERROR: file {file_name} not found!", file=sys.stderr) 
                 exit()
@@ -162,6 +165,7 @@ class DndSuParser(ParsingBoss):
     def populate_soups_from_files(self) -> None:
         names_to_soups: dict[str, BeautifulSoup] = {}
         for spell, file in self.names_to_files.items():
+            print(f'Getting soup for {spell}')
             names_to_soups[spell] = self._ParsingBoss__get_soup_from_file(file)
         self.names_to_soups = names_to_soups
 
@@ -308,6 +312,7 @@ class DndSuParser(ParsingBoss):
             exit()
         print("Getting data from soups")
         for name, soup in self.names_to_soups.items():
+            print(f'Processing {name}, ', end='\t')
             prs = DndSuParser.ParsedRawSpell()
             desc = self.__get_description_from_soup(soup)
             mater_component = self.__get_material_component_from_soup(soup)
