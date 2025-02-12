@@ -75,6 +75,103 @@ class DndSuParser(ParsingBoss):
         BONUS_ACTION = "бонусн".casefold()
         REACTION = "реакц".casefold()
 
+    CLASS_ARCHETYPE_CODE_TRANSLATION: dict = {
+            23: "artificer",
+            22: "druid",
+            21: "wizard",
+            20: "warlock",
+            19: "sorcerer",
+            18: 'Unknown',
+            17: "ranger",
+            16: "paladin",
+            15: 'Unknown',
+            13: "cleric",
+            12: 'bard',
+            11: 'Unknown',
+
+
+            '291': 'barbarian_path_of_the_giant',
+
+            '286': 'sorcerer_lunar_sorcery',
+            '215': 'sorcerer_clockwork_soul',
+            '214': 'sorcerer_abbrant_mind',
+            '212': 'sorcerer_shadow_magic',
+            '211': 'sorcerer_divine_soul',
+
+            '208': 'ranger_drakewarden',
+            '207': 'ranger_swarmkeeper',
+            '206': 'ranger_fey_wanderer',
+            '205': 'ranger_monster_slayer',
+
+            '204': 'ranger_gloom_stalker',
+            '203': 'ranger_horrizon_walker',
+
+            '194': 'rogue_arcane_trickster',
+            '191': 'paladin_oath_of_the_watchers',
+            '190': 'paladin_oath_of_glory',
+            '189': 'paladin_oath_of_conquest',
+            '188': 'paladin_oath_of_redemption',
+            '187': 'paladin_oath_of_the_crown',
+            '186': 'paladin_oathbreaker',
+            '185': 'paladin_oath_of_vengeance',
+            '184': 'paladin_oath_of_the_ancients',
+            '183': 'paladin_oath_of_devotion',
+
+            '179': 'monk_way_of_sun_soul',
+
+            '175': 'monk_way_of_four_elements',
+            '174': 'monk_way_of_shadow',
+
+            '172': 'warlock_undead',
+            '171': 'warlock_genie',
+            '170': 'warlock_fathomless',
+            '169': 'warlock_celestial',
+            '168': 'warlock_hexblade',
+            '167': 'warlock_undying',
+            '166': 'warlock_great_old_one',
+            '165': 'warlock_fiend',
+            '164': 'warlock_archfey',
+            '163': 'artificer_armorer',
+
+            '162': 'artificer_battle_smith',
+            '161': 'artificer_artillerist',
+            '160': 'artificer_alchemist',
+
+            '159': 'cleric_twilight_domain',
+            '158': 'cleric_order_domain',
+            '157': 'cleric_peace_domain',
+            '156': 'cleric_grave_domain',
+            '155': 'cleric_forge_domain',
+            '154': 'cleric_arcana_domain',
+            '153': 'cleric_death_domain',
+            '152': 'cleric_light_domain',
+            '151': 'cleric_nature_domain',
+            '150': 'cleric_trickery',
+            '149': 'cleric_knowlege_domain',
+            '148': 'cleric_life_domain',
+            '147': 'cleric_war_domain',
+            '146': 'cleric_tempest_domain',
+            '145': 'druid_circle_of_spores',
+            '144': 'druid_circle_of_stars',
+            '143': 'druid_circle_of_wildfire',
+
+            '139': 'druid_circle_of_the_land',
+
+            '136': 'wizard_graviturgy',
+            '135': 'wizard_chronurgy',
+
+
+            '124': 'fighter_psi_warrior',
+            '121': 'fighter_arcane_archer',
+
+
+
+
+            '107': 'bard_college_of_spirits',
+
+            }
+
+
     class ParsedRawSpell:
         def __init__(self) -> None:
             self.__raw_dict: dict= {
@@ -374,19 +471,29 @@ def print_spells(spells: list) -> None:
     delimiter = '\n====================\n'
     print_string: str = ''
     for spell in spells:
-        print_string += str(spell)
-        print_string += delimiter
+        archetype: list | None = spell.get('filter_archetype')
+        is_uncatalogued: bool = False
+        if archetype and str(archetype) != '[]':
+            for key in archetype:
+                if key not in DndSuParser.CLASS_ARCHETYPE_CODE_TRANSLATION.keys():
+                    if not is_uncatalogued:
+                        print_string += spell.get('title')
+                        is_uncatalogued = True
+                    print_string += '\t' + str(key)
+        if is_uncatalogued:
+            print_string += delimiter
     print(print_string)
 
 
 if __name__ == "__main__":
     dsp = DndSuParser()
     dsp.populate_spells_list_from_file('spells.html')
-    dsp.link_names_to_files("spells_raw_html")
-    dsp.populate_soups_from_files()
-    dsp.process_spells()
-    # print_spells(dsp.spells)
-    dsp.save_spells("spell_data_from_dndsu")
+    print_spells(dsp.spells_raw)
+    # dsp.link_names_to_files("spells_raw_html")
+    # dsp.populate_soups_from_files()
+    # dsp.process_spells()
+    # # print_spells(dsp.spells)
+    # dsp.save_spells("spell_data_from_dndsu")
     
 
     
