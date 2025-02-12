@@ -20,9 +20,22 @@ class TemplateHandler:
         spell_range: str = "range"
         duration: str = "duration"
         description: str = "description"
-        spell_info:str = "spell_info"
-        spell_name: str = "spell_name"
+        spell_info:str = "spell-info"
+        spell_name: str = "spell-name"
 
+    class TRANSLATIONS:
+        bonus_action: str = "Бонусное действие"
+        action: str = "Действие"
+        hour: str = "часов"
+        minute: str = "минут"
+        second: str = "секунд"
+        day: str = "дней"
+        week: str = "недель"
+        month: str = "месяцев"
+        other: str = "Особое"
+        on_self: str = "На себя"
+        on_touch: str = "Касание"
+        ft:str = "футов"
 
     class ParsedStrings:
         def __init__(self) -> None:
@@ -36,10 +49,10 @@ class TemplateHandler:
                     cbn.spell_info: None,
                     cbn.spell_name: None
                     }
-        def __getitem__(self, name: str, /) -> TemplateString | None:
+        def __getitem__(self, name: str, /) -> Tag | None:
             return self.__raw_dict[name]
 
-        def __setitem__(self, name: str, value: TemplateString | None, /) -> None:
+        def __setitem__(self, name: str, value: Tag | None, /) -> None:
             if name not in self.__raw_dict.keys():
                 raise Exception
             self.__raw_dict[name] = value
@@ -73,7 +86,34 @@ class TemplateHandler:
             self.soup = BeautifulSoup(content, features="html.parser")
 
 
+    def translate_duration(self, duration_value: int, is_action: bool = False) -> str:
+        if is_action:
+            if duration_value == 2:
+                return self.TRANSLATIONS.bonus_action
+            if duration_value == 4:
+                return self.TRANSLATIONS.action
+            if duration_value == 6:
+                return self.TRANSLATIONS.action + 'и' + self.TRANSLATIONS.bonus_action
+        if duration_value%(3600*7*24) == 0:
+            return f'{int(duration_value/(3600*7*24))} {self.TRANSLATIONS.week}'
+        if duration_value%(3600*24) == 0:
+            return f'{int(duration_value/(3600*24))} {self.TRANSLATIONS.day}'
+        if duration_value%(3600) == 0:
+            return f'{int(duration_value/(3600))} {self.TRANSLATIONS.hour}'
+        if duration_value%(60) == 0:
+            return f'{int(duration_value/(60))} {self.TRANSLATIONS.minute}'
+        if duration_value != -1:
+            return f'{int(duration_value)} {self.TRANSLATIONS.second}'
+        return self.TRANSLATIONS.other
 
+    def translate_distance(self, distance_value: int) -> str:
+        match distance_value:
+            case 0:
+                return self.TRANSLATIONS.on_self
+            case 5:
+                return self.TRANSLATIONS.on_touch
+            case _:
+                return f'{distance_value} {self.TRANSLATIONS.ft}'
 
 
     def populate_parsed_strings(self) -> None:

@@ -6,16 +6,26 @@ SPELL_DIRECTORY = 'spell-data'
 REQUIRED_VALUES = ['components', 'casting-time', 'distance', 'duration', 'level', 'description']
 
 
+
 class Spell:
+    """ Conventions:
+    both casting time and duration are stored in seconds
+    casting time: 2 is a bonus action, 4 is an action, 6 is action+bonus
+
+    """
+    class DURATION_CONSTATNS:
+        ACTION = 4
+        BONUS_ACTION = 2
+        REACTION = 0
     def __init__(self, **kwargs) -> None:
         self.__name_ru: str | None = kwargs.get('name_ru')
         self.__name: str = kwargs['name']
         self.__components: dict[str, bool] = kwargs['components']
         self.__material_component: str | None = kwargs.get('material_component')
-        self.__casting_time: str = kwargs['casting_time']
+        self.__casting_time: int = kwargs['casting_time']
         self.__description: str = kwargs['description']
         self.__distance: int = kwargs['distance'] # 0 == cast on self
-        self.__duration: str = kwargs['duration']
+        self.__duration: int = kwargs['duration']
         self.__level: int = kwargs['level']
         self.__is_ritual: bool = kwargs['is_ritual']
         self.__requires_concentration: bool = kwargs['requires_concentration']
@@ -54,7 +64,7 @@ class Spell:
         """ returns dictionary with keys: 'verbal', 'somatic', 'material'"""
         return self.__components
 
-    def get_casting_time(self) -> str:
+    def get_casting_time(self) -> int:
         return self.__casting_time
 
     def get_description(self) -> str:
@@ -62,8 +72,7 @@ class Spell:
 
     def get_distance(self) -> int:
         return self.__distance
-
-    def get_duration(self) -> str:
+    def get_duration(self) -> int:
         return self.__duration
 
     def get_level(self) -> int:
@@ -80,5 +89,5 @@ class Spell:
 
 
 if __name__ == "__main__":
-    sd = Spell.load_from_json('spell-data/Arcane_lock')
+    sd = Spell.load_from_json('spell_data_from_dndsu/Arcane_lock')
     sd.save_to_json('spell')
