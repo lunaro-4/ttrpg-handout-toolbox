@@ -1,6 +1,5 @@
 from typing import Any
 from bs4 import BeautifulSoup, Tag
-from bs4.element import TemplateString
 from html2image import Html2Image
 import shutil
 import os
@@ -121,16 +120,34 @@ class TemplateHandler:
             self.parsed_strings[key] = self.find_elements_by_box(key)
 
     def append_tag_to_element(self, element_name: str, new_tag: Tag) -> None:
+        if element_name == self.CONSTANT_BOX_NAMES.description:
+            print("Can't add element to description box, as it is a <p> tag. Please use 'set_element_text' instead")
+            raise Exception()
         element = self.parsed_strings[element_name]
         if element:
             element.append(new_tag)
         else:
             print(f'Element with name {element_name} is not found in template, skipping')
 
+    def append_picture(self, element_name: str,  relative_path: str) -> None:
+        new_picture_element = self.soup.new_tag('img')
+        new_picture_element['src'] = relative_path
+        self.append_tag_to_element(element_name, new_picture_element)
+
+    def set_element_text(self, element_name: str, new_text: str) -> None:
+        element: Tag | None = self.parsed_strings[element_name]
+        if element:
+            markup = element.string = new_text.replace('\n', '<br>')
+            element.string.replace_with(BeautifulSoup(markup, "html.parser"))
+        else:
+            print(f'Element with name {element_name} is not found in template, skipping')
+
+        pass
 
 
-    def find_elements_by_box(self, box_value: str) -> TemplateString | None:
-        found_boxes: list[TemplateString] = self.soup.find_all(box= box_value)
+
+    def find_elements_by_box(self, box_value: str) -> Tag | None:
+        found_boxes: list[Tag] = self.soup.find_all(box= box_value)
         if len(found_boxes) > 1:
             print(f"More than 1 box of same type found in {self.template}!")
             print(found_boxes)
