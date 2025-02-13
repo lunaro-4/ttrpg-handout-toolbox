@@ -102,7 +102,3 @@ class Spell:
 
     def get_archetypes(self) -> list[str]:
         return self.__archetypes
-
-if __name__ == "__main__":
-    sd = Spell.load_from_json('spell_data_from_dndsu/Arcane_lock.json')
-    sd.save_to_json('spell')

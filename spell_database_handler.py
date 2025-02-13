@@ -114,10 +114,3 @@ class SpellDatabase:
 
 
 
-if __name__ == "__main__":
-    sdb = SpellDatabase()
-    sdb.load_spells_form_directory('spell_data_from_dndsu')
-    sdb.map_names_to_spells()
-    sdb.populate_classes_maps()
-    SpellDatabase.render_spells_to_folder('build/wizard',*sdb.class_to_spells[CLASS_SUBCLASS_MAP.wizard_class_name])
-

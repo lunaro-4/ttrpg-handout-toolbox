@@ -507,25 +507,3 @@ def print_spells(spells: list) -> None:
         # ic(spell.get('filter_class'))
         # ic(spell.get('filter_class_tce'))
     print(print_string)
-
-
-if __name__ == "__main__":
-    dsp = DndSuParser()
-    dsp.populate_spells_list_from_file('spells.html')
-    # print_spells(dsp.spells_raw)
-    dsp.link_names_to_files("spells_raw_html")
-    # class_spell_map = dsp.generate_class_spell_map()
-    # with open("class_spell_file_map.json", 'w') as file:
-    #     file.write(json.dumps(class_spell_map, indent=2).encode().decode("unicode-escape"))
-    dsp.populate_soups_from_files()
-    dsp.process_spells()
-    # print_spells(dsp.spells)
-    dsp.save_spells("spell_data_from_dndsu")
-    
-
-    
-    pass
-
-
-
-
