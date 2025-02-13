@@ -1,11 +1,16 @@
 
 from html2image.html2image import os
+from icecream import ic
 from spell_data_handler import Spell
+from template_handler import TemplateHandler
+from global_constants import CLASS_SUBCLASS_MAP
 
 
 class SpellDatabase:
-    def __init__(self) -> None:
+    def __init__(self, directory: str | None = None) -> None:
         self.spells: list[Spell] = []
+        if directory:
+            self.load_spells_form_directory(directory)
 
     def load_spell_from_json(self, path_to_file: str) -> None:
         new_spell = Spell.load_from_json(path_to_file)
@@ -19,6 +24,92 @@ class SpellDatabase:
                 continue
             self.load_spell_from_json(path_to_directory + '/' + file)
 
+    def map_names_to_spells(self) -> None:
+        self.name_to_spell: dict[str, Spell] = {}
+        for spell in self.spells:
+            self.name_to_spell[spell.get_name()] = spell
+
+
+    def populate_classes_maps(self):
+
+        def add_to_map(map: dict[str, list[Spell]], key: str, value: str | None) -> None:
+            if key not in map.keys():
+                map[key] = []
+            if value:
+                map[key].append(self.name_to_spell[value])
+
+        self.class_to_spells: dict[str, list[Spell]] = {}
+
+        for spell in self.spells:
+            total_classes: list[str] = []
+            total_classes.extend(spell.get_classes())
+            total_classes.extend(spell.get_classes_tce())
+            total_classes.extend(spell.get_archetypes())
+            spell_name: str = spell.get_name()
+            for class_name in total_classes:
+                add_to_map(self.class_to_spells, class_name, spell_name)
+
+
+    @staticmethod
+    def render_spells_to_folder(folder: str, classes_to_specify: list[str] | None = None, *spells: Spell) -> None:
+        def convert_components_to_string(component_dict: dict[str, bool]) -> str:
+            return_list: list[str] = []
+            if component_dict.get('verbal'):
+                return_list.append('В')
+            if component_dict.get('somatic'):
+                return_list.append('С')
+            if component_dict.get('material'):
+                return_list.append('М')
+            return ','.join(return_list)
+
+
+        def casting_time_set_picture(th: TemplateHandler, casting_time_value: int) -> None:
+            soup = th.soup
+            if casting_time_value == 4:
+                th.append_picture(th.CONSTANT_BOX_NAMES.casting_time, 'src/action.png')
+            elif casting_time_value == 2:
+                th.append_picture(th.CONSTANT_BOX_NAMES.casting_time, 'src/bonus-action.png')
+            elif casting_time_value == 6:
+                th.append_picture(th.CONSTANT_BOX_NAMES.casting_time, 'src/bonus-action.png')
+                th.append_picture(th.CONSTANT_BOX_NAMES.casting_time, 'src/action.png')
+            else:
+                casting_time_element = soup.new_tag("p")
+                casting_time_element.string = th.translate_duration(casting_time_value, is_action=True)
+                th.append_tag_to_element(th.CONSTANT_BOX_NAMES.casting_time, casting_time_element)
+
+        for spell in spells:
+            th = TemplateHandler()
+            soup = th.soup
+            th.set_element_text(th.CONSTANT_BOX_NAMES.spell_name, spell.get_name_ru())
+            th.set_element_text(th.CONSTANT_BOX_NAMES.description, spell.get_description())
+            components_element = soup.new_tag("p")
+            components_element.string = convert_components_to_string(spell.get_components())
+            duration_element = soup.new_tag("p")
+            duration_element.string = th.translate_duration(spell.get_duration())
+            distance_element = soup.new_tag("p")
+            distance_element.string = th.translate_distance(spell.get_distance())
+
+            casting_time_value = spell.get_casting_time()
+            casting_time_set_picture(th, casting_time_value)
+
+
+
+            if spell.get_is_ritual():
+                th.append_picture(th.CONSTANT_BOX_NAMES.spell_info, 'src/ritual.png')
+                
+                
+
+
+
+            th.append_tag_to_element(th.CONSTANT_BOX_NAMES.components, components_element)
+            th.append_tag_to_element(th.CONSTANT_BOX_NAMES.duration, duration_element)
+            th.append_tag_to_element(th.CONSTANT_BOX_NAMES.spell_range, distance_element)
+            # th.append_tag_to_element(th.CONSTANT_BOX_NAMES.description , description_element)
+
+            file_name: str = folder + '/' + spell.get_name() + '.png'
+            th.render(file_path=file_name)
+
+        
 
 
 
@@ -26,5 +117,7 @@ class SpellDatabase:
 if __name__ == "__main__":
     sdb = SpellDatabase()
     sdb.load_spells_form_directory('spell_data_from_dndsu')
-    print(len(sdb.spells))
+    sdb.map_names_to_spells()
+    sdb.populate_classes_maps()
+    SpellDatabase.render_spells_to_folder('build/wizard',*sdb.class_to_spells[CLASS_SUBCLASS_MAP.wizard_class_name])
 

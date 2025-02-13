@@ -23,28 +23,38 @@ class Spell:
         self.__level: int = kwargs['level']
         self.__is_ritual: bool = kwargs['is_ritual']
         self.__requires_concentration: bool = kwargs['requires_concentration']
-        self.__classes: list[str] | None = kwargs.get('classes')
-        self.__classes_tce: list[str] | None = kwargs.get('classes_tce')
-        self.__archetypes: list[str] | None = kwargs.get('archetypes')
+        self.__classes: list[str] = kwargs['classes']
+        self.__classes_tce: list[str] = kwargs['classes_tce']
+        self.__archetypes: list[str] = kwargs['archetypes']
 
         self.__json: dict = kwargs
 
     @classmethod
     def load_from_json(cls, spell_path: str ) -> typing.Self:
         loaded_data: dict = {}
-        with open(f'{spell_path}.json', 'r') as f:
-            loaded_data =  json.load(f, strict=False)
+        if not spell_path[-4:] == "json":
+            print(f'{spell_path} is not a json')
+            raise Exception
+        with open(spell_path, 'r') as f:
+            try:
+                loaded_data =  json.load(f, strict=False)
+            except Exception as e:
+                print(spell_path)
+                raise e
 
         for component, value in loaded_data['components'].items():
             loaded_data['components'][component] = bool(value)
 
         return cls(**loaded_data)
 
-    def __str__(self) -> str :
+    def __repr__(self) -> str :
         return json.dumps(self.__json, indent=2).replace('\\/', '/').encode().decode("unicode-escape")
+    
+    def __eq__(self, other) -> bool:
+        return self.get_name() == other.get_name()
 
     def save_to_json(self, save_path: str) -> None:
-        with open(f'{save_path}.json', "w") as file:
+        with open(f'{save_path}', "w") as file:
             file.write(json.dumps(self.__json, indent=4).encode().decode("unicode-escape"))
     def get_file_name(self) -> str:
         return self.__name.replace('/', '_').replace('\\', '_').replace(' ', '_')
@@ -84,7 +94,15 @@ class Spell:
     def get_requires_concentration(self) -> bool:
         return self.__requires_concentration
 
+    def get_classes(self) -> list[str]:
+        return self.__classes
+
+    def get_classes_tce(self) -> list[str]:
+        return self.__classes_tce
+
+    def get_archetypes(self) -> list[str]:
+        return self.__archetypes
 
 if __name__ == "__main__":
-    sd = Spell.load_from_json('spell_data_from_dndsu/Arcane_lock')
+    sd = Spell.load_from_json('spell_data_from_dndsu/Arcane_lock.json')
     sd.save_to_json('spell')

@@ -49,7 +49,7 @@ class ParsingBoss(ABC):
             return save_path
         else:
             for spell in self.spells:
-                spell.save_to_json(directory+"/"+spell.get_file_name())
+                spell.save_to_json(directory+"/"+spell.get_file_name()+ '.json')
 
     def render_spell(self,spell_info: dict) -> Spell:
         """ Place to do convertions, in case 'Spell' vaules will change """
@@ -211,27 +211,6 @@ class DndSuParser(ParsingBoss):
             refined_classes.append(self.CLASS_ARCHETYPE_CODE_TRANSLATION[class_id])
         return refined_classes
 
-    def generate_class_spell_map(self, add_classes: bool = True, add_tce: bool = True, add_archetypes: bool = True) -> dict[str, list[str]]:
-        if add_classes + add_tce + add_archetypes == 0:
-            raise Exception
-        class_to_spell: dict[str, list[str]] = {}
-        def add_to_map(map: dict[str, list[str]], key: str, value: str | None) -> None:
-            if key not in map.keys():
-                map[key] = []
-            if value:
-                map[key].append(value)
-        for spell in self.spells_raw:
-            spell_conventional_name: str = self.__get_spell_name(spell)
-            spell_to_classes_raw: list = spell['filter_class']
-            # ADD TCE TO CLASS LIST
-            spell_to_classes_raw.extend(spell['filter_class_tce'])
-            # ADD ACHETYPE TO CLASS LIST
-            spell_to_classes_raw.extend(spell['filter_archetype'])
-            for class_name in spell_to_classes_raw:
-                class_conventional_name: str = self.CLASS_ARCHETYPE_CODE_TRANSLATION[class_name]
-                add_to_map(class_to_spell, class_conventional_name, file_name)
-            
-        return class_to_spell
         
     def populate_spells_list_from_file(self, file_path: str, restrict_length: int = 0) -> None:
         print('Parsing spell list from ', file_path)
@@ -478,12 +457,11 @@ class DndSuParser(ParsingBoss):
                 "components": components_to_bool,
                 "material_component": prs['material_component'],
                 "casting_time": prs['casting_time'],
-                "description": prs['description'],
+                "description": prs['description'].replace('"', '\\"'),
                 "distance":prs['distance'],
                 "duration":prs['duration'],
                 "level":spell_info['level'],
-                "is_ritual":is_ritual,
-                "requires_concentration":prs['has_concentration'],
+                "is_ritual":is_ritual, "requires_concentration":prs['has_concentration'],
                 "classes": classes,
                 "classes_tce": classes_tce,
                 "archetypes": archetypes
@@ -536,13 +514,13 @@ if __name__ == "__main__":
     dsp.populate_spells_list_from_file('spells.html')
     # print_spells(dsp.spells_raw)
     dsp.link_names_to_files("spells_raw_html")
-    class_spell_map = dsp.generate_class_spell_map()
-    with open("class_spell_file_map.json", 'w') as file:
-        file.write(json.dumps(class_spell_map, indent=2).encode().decode("unicode-escape"))
-    # dsp.populate_soups_from_files()
-    # dsp.process_spells()
-    # # print_spells(dsp.spells)
-    # dsp.save_spells("spell_data_from_dndsu")
+    # class_spell_map = dsp.generate_class_spell_map()
+    # with open("class_spell_file_map.json", 'w') as file:
+    #     file.write(json.dumps(class_spell_map, indent=2).encode().decode("unicode-escape"))
+    dsp.populate_soups_from_files()
+    dsp.process_spells()
+    # print_spells(dsp.spells)
+    dsp.save_spells("spell_data_from_dndsu")
     
 
     
