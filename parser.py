@@ -1,3 +1,4 @@
+import json
 import re
 import sys
 from icecream import ic
@@ -11,6 +12,119 @@ from bs4 import BeautifulSoup
 
 
 DNDSU_URL = "https://dnd.su"
+
+class CLASS_SUBCLASS_MAP:  
+    druid_class_name: str = 'druid'
+    druid_archetype_names: dict[str, str] = {
+            'circle_of_spores': 'circle_of_spores',
+            'circle_of_stars': 'circle_of_stars',
+            'circle_of_wildfire': 'circle_of_wildfire',
+            'circle_of_the_land': 'circle_of_the_land',
+
+            }
+    ranger_class_name: str = 'ranger'
+    ranger_archetype_names: dict[str, str] = {
+            'drakewarden': 'drakewarden',
+            'swarmkeeper': 'swarmkeeper',
+            'fey_wanderer': 'fey_wanderer',
+            'monster_slayer': 'monster_slayer',
+            'gloom_stalker': 'gloom_stalker',
+            'horrizon_walker': 'horrizon_walker',
+            }
+    paladin_class_name: str = 'paladin'
+    paladin_archetype_names: dict[str, str] = {
+            'oath_of_the_watchers': 'oath_of_the_watchers',
+            'oath_of_glory': 'oath_of_glory',
+            'oath_of_conquest': 'oath_of_conquest',
+            'oath_of_redemption': 'oath_of_redemption',
+            'oath_of_the_crown': 'oath_of_the_crown',
+            'oathbreaker': 'oathbreaker',
+            'oath_of_vengeance': 'oath_of_vengeance',
+            'oath_of_the_ancients': 'oath_of_the_ancients',
+            'oath_of_devotion': 'oath_of_devotion',
+            }
+    wizard_class_name: str = 'wizard'
+    wizard_archetype_names: dict[str, str] = {
+            'graviturgy': 'graviturgy',
+            'chronurgy': 'chronurgy',
+            }
+    fighter_class_name: str = 'fighter'
+    fighter_archetype_names: dict[str, str] ={
+            'psi_warrior': 'psi_warrior',
+            'arcane_archer': 'arcane_archer',
+            }
+    cleric_class_name: str = 'cleric'
+    cleric_archetype_names: dict[str, str] = {
+            'twilight_domain': 'twilight_domain',
+            'order_domain': 'order_domain',
+            'peace_domain': 'peace_domain',
+            'grave_domain': 'grave_domain',
+            'forge_domain': 'forge_domain',
+            'arcana_domain': 'arcana_domain',
+            'death_domain': 'death_domain',
+            'light_domain': 'light_domain',
+            'nature_domain': 'nature_domain',
+            'trickery': 'trickery',
+            'knowlege_domain': 'knowlege_domain',
+            'life_domain': 'life_domain',
+            'war_domain': 'war_domain',
+            'tempest_domain': 'tempest_domain',
+
+            }
+    artificer_class_name: str = 'artificer'
+    artificer_archetype_names: dict[str, str] = {
+            'armorer': 'armorer',
+            'battle_smith': 'battle_smith',
+            'artillerist': 'artillerist',
+            'alchemist': 'alchemist',
+            }
+    warlock_class_name: str = 'warlock'
+    warlock_archetype_names: dict[str, str] = {
+            'undead': 'undead',
+            'genie': 'genie',
+            'fathomless': 'fathomless',
+            'celestial': 'celestial',
+            'hexblade': 'hexblade',
+            'undying': 'undying',
+            'great_old_one': 'great_old_one',
+            'fiend': 'fiend',
+            'archfey': 'archfey',
+            }
+    monk_class_name: str = 'monk'
+    monk_archetype_names: dict[str, str] = {
+            'way_of_sun_soul': 'way_of_sun_soul',
+
+            'way_of_four_elements': 'way_of_four_elements',
+            'way_of_shadow': 'way_of_shadow',
+            }
+    rogue_class_name : str = 'rogue'
+    rogue_archetype_names: dict[str, str] = {
+            'arcane_trickster': 'arcane_trickster',
+            }
+
+    barbarian_class_name: str = 'barbarian'
+    barbarian_archetype_names: dict[str, str] = {
+
+            'path_of_the_giant': 'path_of_the_giant',
+            }
+    sorcerer_class_name: str = 'sorcerer' 
+    sorcerer_archetype_names: dict[str, str] = {
+            'lunar_sorcery': 'lunar_sorcery',
+            'clockwork_soul': 'clockwork_soul',
+            'abbrant_mind': 'abbrant_mind',
+            'shadow_magic': 'shadow_magic',
+            'divine_soul': 'divine_soul',
+            }
+    bard_class_name: str = 'bard'
+    bard_archetype_names: dict[str,str] = {
+            'college_of_spirits': 'college_of_spirits',
+            }
+
+
+
+
+    pass
+
 
 class ParsingBoss(ABC):
     """ This is a ParsingBoss class, responseble for parsing spells from files and sites
@@ -37,15 +151,14 @@ class ParsingBoss(ABC):
 
     def get_spells(self) -> list[Spell]:
         return self.spells
-    def save_spells(self, directory: str,  spell: Spell | None = None):
-        spells_to_save: list[Spell] = []
+    def save_spells(self, directory: str,  spell: Spell | None = None) -> str | None:
         if spell:
-            spells_to_save.append(spell)
+            save_path = directory+"/"+spell.get_file_name()
+            spell.save_to_json(save_path)
+            return save_path
         else:
-            spells_to_save = self.spells
-
-        for spell in self.spells:
-            spell.save_to_json(directory+"/"+spell.get_file_name())
+            for spell in self.spells:
+                spell.save_to_json(directory+"/"+spell.get_file_name())
 
     def render_spell(self,spell_info: dict) -> Spell:
         """ Place to do convertions, in case 'Spell' vaules will change """
@@ -76,98 +189,92 @@ class DndSuParser(ParsingBoss):
         REACTION = "реакц".casefold()
 
     CLASS_ARCHETYPE_CODE_TRANSLATION: dict = {
-            23: "artificer",
-            22: "druid",
-            21: "wizard",
-            20: "warlock",
-            19: "sorcerer",
+            23: CLASS_SUBCLASS_MAP.artificer_class_name,
+            22: CLASS_SUBCLASS_MAP.druid_class_name,
+            21: CLASS_SUBCLASS_MAP.wizard_class_name,
+            20: CLASS_SUBCLASS_MAP.warlock_class_name,
+            19: CLASS_SUBCLASS_MAP.sorcerer_class_name,
             18: 'Unknown',
-            17: "ranger",
-            16: "paladin",
+            17: CLASS_SUBCLASS_MAP.ranger_class_name,
+            16: CLASS_SUBCLASS_MAP.paladin_class_name,
             15: 'Unknown',
-            13: "cleric",
-            12: 'bard',
+            13: CLASS_SUBCLASS_MAP.cleric_class_name,
+            12: CLASS_SUBCLASS_MAP.bard_class_name,
             11: 'Unknown',
 
 
-            '291': 'barbarian_path_of_the_giant',
+            '291': CLASS_SUBCLASS_MAP.barbarian_archetype_names['path_of_the_giant'],
 
-            '286': 'sorcerer_lunar_sorcery',
-            '215': 'sorcerer_clockwork_soul',
-            '214': 'sorcerer_abbrant_mind',
-            '212': 'sorcerer_shadow_magic',
-            '211': 'sorcerer_divine_soul',
+            '286': CLASS_SUBCLASS_MAP.sorcerer_archetype_names['lunar_sorcery'],
+            '215': CLASS_SUBCLASS_MAP.sorcerer_archetype_names['clockwork_soul'],
+            '214': CLASS_SUBCLASS_MAP.sorcerer_archetype_names['abbrant_mind'],
+            '212': CLASS_SUBCLASS_MAP.sorcerer_archetype_names['shadow_magic'],
+            '211': CLASS_SUBCLASS_MAP.sorcerer_archetype_names['divine_soul'],
 
-            '208': 'ranger_drakewarden',
-            '207': 'ranger_swarmkeeper',
-            '206': 'ranger_fey_wanderer',
-            '205': 'ranger_monster_slayer',
+            '208': CLASS_SUBCLASS_MAP.ranger_archetype_names['drakewarden'],
+            '207': CLASS_SUBCLASS_MAP.ranger_archetype_names['swarmkeeper'],
+            '206': CLASS_SUBCLASS_MAP.ranger_archetype_names['fey_wanderer'],
+            '205': CLASS_SUBCLASS_MAP.ranger_archetype_names['monster_slayer'],
+            '204': CLASS_SUBCLASS_MAP.ranger_archetype_names['gloom_stalker'],
+            '203': CLASS_SUBCLASS_MAP.ranger_archetype_names['horrizon_walker'],
 
-            '204': 'ranger_gloom_stalker',
-            '203': 'ranger_horrizon_walker',
+            '194': CLASS_SUBCLASS_MAP.rogue_archetype_names['arcane_trickster'],
+            '191': CLASS_SUBCLASS_MAP.paladin_archetype_names['oath_of_the_watchers'],
+            '190': CLASS_SUBCLASS_MAP.paladin_archetype_names['oath_of_glory'],
+            '189': CLASS_SUBCLASS_MAP.paladin_archetype_names['oath_of_conquest'],
+            '188': CLASS_SUBCLASS_MAP.paladin_archetype_names['oath_of_redemption'],
+            '187': CLASS_SUBCLASS_MAP.paladin_archetype_names['oath_of_the_crown'],
+            '186': CLASS_SUBCLASS_MAP.paladin_archetype_names['oathbreaker'],
+            '185': CLASS_SUBCLASS_MAP.paladin_archetype_names['oath_of_vengeance'],
+            '184': CLASS_SUBCLASS_MAP.paladin_archetype_names['oath_of_the_ancients'],
+            '183': CLASS_SUBCLASS_MAP.paladin_archetype_names['oath_of_devotion'],
 
-            '194': 'rogue_arcane_trickster',
-            '191': 'paladin_oath_of_the_watchers',
-            '190': 'paladin_oath_of_glory',
-            '189': 'paladin_oath_of_conquest',
-            '188': 'paladin_oath_of_redemption',
-            '187': 'paladin_oath_of_the_crown',
-            '186': 'paladin_oathbreaker',
-            '185': 'paladin_oath_of_vengeance',
-            '184': 'paladin_oath_of_the_ancients',
-            '183': 'paladin_oath_of_devotion',
+            '179': CLASS_SUBCLASS_MAP.monk_archetype_names['way_of_sun_soul'],
 
-            '179': 'monk_way_of_sun_soul',
+            '175': CLASS_SUBCLASS_MAP.monk_archetype_names['way_of_four_elements'],
+            '174': CLASS_SUBCLASS_MAP.monk_archetype_names['way_of_shadow'],
 
-            '175': 'monk_way_of_four_elements',
-            '174': 'monk_way_of_shadow',
+            '172': CLASS_SUBCLASS_MAP.warlock_archetype_names['undead'],
+            '171': CLASS_SUBCLASS_MAP.warlock_archetype_names['genie'],
+            '170': CLASS_SUBCLASS_MAP.warlock_archetype_names['fathomless'],
+            '169': CLASS_SUBCLASS_MAP.warlock_archetype_names['celestial'],
+            '168': CLASS_SUBCLASS_MAP.warlock_archetype_names['hexblade'],
+            '167': CLASS_SUBCLASS_MAP.warlock_archetype_names['undying'],
+            '166': CLASS_SUBCLASS_MAP.warlock_archetype_names['great_old_one'],
+            '165': CLASS_SUBCLASS_MAP.warlock_archetype_names['fiend'],
+            '164': CLASS_SUBCLASS_MAP.warlock_archetype_names['archfey'],
+            '163': CLASS_SUBCLASS_MAP.artificer_archetype_names['armorer'],
+            '162': CLASS_SUBCLASS_MAP.artificer_archetype_names['battle_smith'],
+            '161': CLASS_SUBCLASS_MAP.artificer_archetype_names['artillerist'],
+            '160': CLASS_SUBCLASS_MAP.artificer_archetype_names['alchemist'],
+            '159': CLASS_SUBCLASS_MAP.cleric_archetype_names['twilight_domain'],
+            '158': CLASS_SUBCLASS_MAP.cleric_archetype_names['order_domain'],
+            '157': CLASS_SUBCLASS_MAP.cleric_archetype_names['peace_domain'],
+            '156': CLASS_SUBCLASS_MAP.cleric_archetype_names['grave_domain'],
+            '155': CLASS_SUBCLASS_MAP.cleric_archetype_names['forge_domain'],
+            '154': CLASS_SUBCLASS_MAP.cleric_archetype_names['arcana_domain'],
+            '153': CLASS_SUBCLASS_MAP.cleric_archetype_names['death_domain'],
+            '152': CLASS_SUBCLASS_MAP.cleric_archetype_names['light_domain'],
+            '151': CLASS_SUBCLASS_MAP.cleric_archetype_names['nature_domain'],
+            '150': CLASS_SUBCLASS_MAP.cleric_archetype_names['trickery'],
+            '149': CLASS_SUBCLASS_MAP.cleric_archetype_names['knowlege_domain'],
+            '148': CLASS_SUBCLASS_MAP.cleric_archetype_names['life_domain'],
+            '147': CLASS_SUBCLASS_MAP.cleric_archetype_names['war_domain'],
+            '146': CLASS_SUBCLASS_MAP.cleric_archetype_names['tempest_domain'],
+            '145': CLASS_SUBCLASS_MAP.druid_archetype_names['circle_of_spores'],
+            '144': CLASS_SUBCLASS_MAP.druid_archetype_names['circle_of_stars'],
+            '143': CLASS_SUBCLASS_MAP.druid_archetype_names['circle_of_wildfire'],
 
-            '172': 'warlock_undead',
-            '171': 'warlock_genie',
-            '170': 'warlock_fathomless',
-            '169': 'warlock_celestial',
-            '168': 'warlock_hexblade',
-            '167': 'warlock_undying',
-            '166': 'warlock_great_old_one',
-            '165': 'warlock_fiend',
-            '164': 'warlock_archfey',
-            '163': 'artificer_armorer',
+            '139': CLASS_SUBCLASS_MAP.druid_archetype_names['circle_of_the_land'],
 
-            '162': 'artificer_battle_smith',
-            '161': 'artificer_artillerist',
-            '160': 'artificer_alchemist',
+            '136': CLASS_SUBCLASS_MAP.wizard_archetype_names['graviturgy'],
+            '135': CLASS_SUBCLASS_MAP.wizard_archetype_names['chronurgy'],
 
-            '159': 'cleric_twilight_domain',
-            '158': 'cleric_order_domain',
-            '157': 'cleric_peace_domain',
-            '156': 'cleric_grave_domain',
-            '155': 'cleric_forge_domain',
-            '154': 'cleric_arcana_domain',
-            '153': 'cleric_death_domain',
-            '152': 'cleric_light_domain',
-            '151': 'cleric_nature_domain',
-            '150': 'cleric_trickery',
-            '149': 'cleric_knowlege_domain',
-            '148': 'cleric_life_domain',
-            '147': 'cleric_war_domain',
-            '146': 'cleric_tempest_domain',
-            '145': 'druid_circle_of_spores',
-            '144': 'druid_circle_of_stars',
-            '143': 'druid_circle_of_wildfire',
+            '124': CLASS_SUBCLASS_MAP.fighter_archetype_names['psi_warrior'],
 
-            '139': 'druid_circle_of_the_land',
+            '121': CLASS_SUBCLASS_MAP.fighter_archetype_names['arcane_archer'],
 
-            '136': 'wizard_graviturgy',
-            '135': 'wizard_chronurgy',
-
-
-            '124': 'fighter_psi_warrior',
-            '121': 'fighter_arcane_archer',
-
-
-
-
-            '107': 'bard_college_of_spirits',
+            '107': CLASS_SUBCLASS_MAP.bard_archetype_names['college_of_spirits'],
 
             }
 
@@ -206,6 +313,34 @@ class DndSuParser(ParsingBoss):
         spells_dict = ast.literal_eval(spells_raw_refined)
         print(f'Found {len(spells_dict)} spells ')
         return spells_dict['cards']
+
+    def __get_classes_from_query(self, classes_list: list[str | int]) -> list[str]:
+        refined_classes: list[str] = []
+        for class_id in classes_list:
+            refined_classes.append(self.CLASS_ARCHETYPE_CODE_TRANSLATION[class_id])
+        return refined_classes
+
+    def generate_class_spell_map(self, add_classes: bool = True, add_tce: bool = True, add_archetypes: bool = True) -> dict[str, list[str]]:
+        if add_classes + add_tce + add_archetypes == 0:
+            raise Exception
+        class_to_spell: dict[str, list[str]] = {}
+        def add_to_map(map: dict[str, list[str]], key: str, value: str | None) -> None:
+            if key not in map.keys():
+                map[key] = []
+            if value:
+                map[key].append(value)
+        for spell in self.spells_raw:
+            spell_conventional_name: str = self.__get_spell_name(spell)
+            spell_to_classes_raw: list = spell['filter_class']
+            # ADD TCE TO CLASS LIST
+            spell_to_classes_raw.extend(spell['filter_class_tce'])
+            # ADD ACHETYPE TO CLASS LIST
+            spell_to_classes_raw.extend(spell['filter_archetype'])
+            for class_name in spell_to_classes_raw:
+                class_conventional_name: str = self.CLASS_ARCHETYPE_CODE_TRANSLATION[class_name]
+                add_to_map(class_to_spell, class_conventional_name, file_name)
+            
+        return class_to_spell
         
     def populate_spells_list_from_file(self, file_path: str, restrict_length: int = 0) -> None:
         print('Parsing spell list from ', file_path)
@@ -265,6 +400,10 @@ class DndSuParser(ParsingBoss):
             print(f'Getting soup for {spell}')
             names_to_soups[spell] = self._ParsingBoss__get_soup_from_file(file)
         self.names_to_soups = names_to_soups
+
+    def restrict_by_class(self, class_name: str) -> None:
+
+        pass
 
     def __clean_distance(self, raw_distance: str) -> int:
         raw_distance = raw_distance.casefold().strip()
@@ -432,6 +571,9 @@ class DndSuParser(ParsingBoss):
         has_somatic: bool = int(components_raw[2]) == 1
         has_material: bool = int(components_raw[4]) == 1
         prs = self.names_to_values[spell_name]
+        classes: list[str] = self.__get_classes_from_query(spell_info['filter_class'])
+        classes_tce: list[str] = self.__get_classes_from_query(spell_info['filter_class_tce'])
+        archetypes: list[str] = self.__get_classes_from_query(spell_info['filter_archetype'])
 
         components_to_bool: dict[str, bool] = {
                 "verbal": has_verbal,
@@ -450,7 +592,10 @@ class DndSuParser(ParsingBoss):
                 "duration":prs['duration'],
                 "level":spell_info['level'],
                 "is_ritual":is_ritual,
-                "requires_concentration":prs['has_concentration']
+                "requires_concentration":prs['has_concentration'],
+                "classes": classes,
+                "classes_tce": classes_tce,
+                "archetypes": archetypes
                 }
         return Spell(**new_spell_dict)
 
@@ -467,7 +612,7 @@ class DndSuParser(ParsingBoss):
         pass
 
 
-def print_spells(spells: list) -> None:
+def get_archetype(spells:list) -> None:
     delimiter = '\n====================\n'
     print_string: str = ''
     for spell in spells:
@@ -484,12 +629,25 @@ def print_spells(spells: list) -> None:
             print_string += delimiter
     print(print_string)
 
+def print_spells(spells: list) -> None:
+    delimiter = '\n====================\n'
+    print_string: str = ''
+    for spell in spells:
+        ic(spell)
+        # ic(spell.get('title'))
+        # ic(spell.get('filter_class'))
+        # ic(spell.get('filter_class_tce'))
+    print(print_string)
+
 
 if __name__ == "__main__":
     dsp = DndSuParser()
     dsp.populate_spells_list_from_file('spells.html')
-    print_spells(dsp.spells_raw)
-    # dsp.link_names_to_files("spells_raw_html")
+    # print_spells(dsp.spells_raw)
+    dsp.link_names_to_files("spells_raw_html")
+    class_spell_map = dsp.generate_class_spell_map()
+    with open("class_spell_file_map.json", 'w') as file:
+        file.write(json.dumps(class_spell_map, indent=2).encode().decode("unicode-escape"))
     # dsp.populate_soups_from_files()
     # dsp.process_spells()
     # # print_spells(dsp.spells)

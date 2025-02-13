@@ -1,22 +1,16 @@
 import json
 import typing
 
-DEFAULT_SPELL_NAME = 'aid'
-SPELL_DIRECTORY = 'spell-data'
-REQUIRED_VALUES = ['components', 'casting-time', 'distance', 'duration', 'level', 'description']
 
 
 
 class Spell:
-    """ Conventions:
-    both casting time and duration are stored in seconds
-    casting time: 2 is a bonus action, 4 is an action, 6 is action+bonus
 
-    """
     class DURATION_CONSTATNS:
         ACTION = 4
         BONUS_ACTION = 2
         REACTION = 0
+
     def __init__(self, **kwargs) -> None:
         self.__name_ru: str | None = kwargs.get('name_ru')
         self.__name: str = kwargs['name']
@@ -29,11 +23,14 @@ class Spell:
         self.__level: int = kwargs['level']
         self.__is_ritual: bool = kwargs['is_ritual']
         self.__requires_concentration: bool = kwargs['requires_concentration']
+        self.__classes: list[str] | None = kwargs.get('classes')
+        self.__classes_tce: list[str] | None = kwargs.get('classes_tce')
+        self.__archetypes: list[str] | None = kwargs.get('archetypes')
 
         self.__json: dict = kwargs
 
     @classmethod
-    def load_from_json(cls, spell_path: str = SPELL_DIRECTORY + '/' + DEFAULT_SPELL_NAME) -> typing.Self:
+    def load_from_json(cls, spell_path: str ) -> typing.Self:
         loaded_data: dict = {}
         with open(f'{spell_path}.json', 'r') as f:
             loaded_data =  json.load(f, strict=False)
