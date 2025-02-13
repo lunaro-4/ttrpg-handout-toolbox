@@ -15,7 +15,7 @@
 ",
     "distance": 30,
     "duration": 28800,
-    "level": "2",
+    "level": 2,
     "is_ritual": false,
     "requires_concentration": true,
     "classes": [

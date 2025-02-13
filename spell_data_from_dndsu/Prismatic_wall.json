@@ -23,7 +23,7 @@
 ",
     "distance": 60,
     "duration": 600,
-    "level": "9",
+    "level": 9,
     "is_ritual": false,
     "requires_concentration": false,
     "classes": [

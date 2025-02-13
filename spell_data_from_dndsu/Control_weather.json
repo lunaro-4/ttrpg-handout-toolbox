@@ -102,7 +102,7 @@
 ",
     "distance": 0,
     "duration": 28800,
-    "level": "8",
+    "level": 8,
     "is_ritual": false,
     "requires_concentration": true,
     "classes": [

@@ -18,7 +18,7 @@
 Накладывание этого заклинания на одно и то же место каждый день в течение года делает этот эффект постоянным.",
     "distance": 120,
     "duration": 86400,
-    "level": "7",
+    "level": 7,
     "is_ritual": false,
     "requires_concentration": false,
     "classes": [

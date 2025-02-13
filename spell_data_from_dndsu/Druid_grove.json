@@ -23,7 +23,7 @@
 Для существа, невосприимчивого к данному эффекту, ветры – это приятный легкий бриз, а шипы безвредны.",
     "distance": 5,
     "duration": 86400,
-    "level": "6",
+    "level": 6,
     "is_ritual": false,
     "requires_concentration": false,
     "classes": [

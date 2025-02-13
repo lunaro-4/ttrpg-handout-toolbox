@@ -6,7 +6,7 @@ from typing import Any
 from html2image.html2image import os
 import requests
 from abc import ABC, abstractmethod
-from spell_data_handler import Spell
+from spell_handler import Spell
 import ast
 from bs4 import BeautifulSoup
 from global_constants import CLASS_SUBCLASS_MAP
@@ -210,6 +210,11 @@ class DndSuParser(ParsingBoss):
         for class_id in classes_list:
             refined_classes.append(self.CLASS_ARCHETYPE_CODE_TRANSLATION[class_id])
         return refined_classes
+    def __get_level_from_query(self, level: str) -> int:
+        if level.casefold() == 'Заговор'.casefold():
+            return 0
+        return int(level)
+
 
         
     def populate_spells_list_from_file(self, file_path: str, restrict_length: int = 0) -> None:
@@ -460,7 +465,7 @@ class DndSuParser(ParsingBoss):
                 "description": prs['description'].replace('"', '\\"'),
                 "distance":prs['distance'],
                 "duration":prs['duration'],
-                "level":spell_info['level'],
+                "level": self.__get_level_from_query(spell_info['level']),
                 "is_ritual":is_ritual, "requires_concentration":prs['has_concentration'],
                 "classes": classes,
                 "classes_tce": classes_tce,

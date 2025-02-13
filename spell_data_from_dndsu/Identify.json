@@ -13,7 +13,7 @@
 ",
     "distance": 5,
     "duration": -1,
-    "level": "1",
+    "level": 1,
     "is_ritual": true,
     "requires_concentration": false,
     "classes": [

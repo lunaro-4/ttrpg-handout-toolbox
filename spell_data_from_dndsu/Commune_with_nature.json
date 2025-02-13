@@ -20,7 +20,7 @@
 ",
     "distance": 0,
     "duration": -1,
-    "level": "5",
+    "level": 5,
     "is_ritual": true,
     "requires_concentration": false,
     "classes": [

@@ -18,7 +18,7 @@
 ",
     "distance": 30,
     "duration": -1,
-    "level": "Заговор",
+    "level": 0,
     "is_ritual": false,
     "requires_concentration": false,
     "classes": [
