@@ -15,5 +15,17 @@
     "duration": 60,
     "level": "3",
     "is_ritual": false,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [
+        "wizard",
+        "warlock"
+    ],
+    "classes_tce": [
+        "sorcerer"
+    ],
+    "archetypes": [
+        "death_domain",
+        "grave_domain",
+        "lunar_sorcery"
+    ]
 }

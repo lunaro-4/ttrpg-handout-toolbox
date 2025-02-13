@@ -14,5 +14,17 @@
     "duration": 60,
     "level": "3",
     "is_ritual": false,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [
+        "paladin"
+    ],
+    "classes_tce": [
+        "cleric",
+        "druid"
+    ],
+    "archetypes": [
+        "twilight_domain",
+        "battle_smith",
+        "oath_of_the_crown"
+    ]
 }

@@ -15,5 +15,15 @@
     "duration": 3600,
     "level": "3",
     "is_ritual": true,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "wizard",
+        "bard",
+        "druid",
+        "cleric"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "undying"
+    ]
 }

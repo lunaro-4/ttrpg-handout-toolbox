@@ -17,5 +17,14 @@
     "duration": 60,
     "level": "2",
     "is_ritual": false,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "cleric"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "war_domain",
+        "life_domain",
+        "oath_of_conquest"
+    ]
 }

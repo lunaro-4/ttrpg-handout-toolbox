@@ -15,5 +15,20 @@
     "duration": 600,
     "level": "1",
     "is_ritual": true,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [
+        "wizard",
+        "bard",
+        "druid",
+        "cleric",
+        "artificer",
+        "paladin",
+        "ranger",
+        "sorcerer"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "arcana_domain",
+        "oath_of_the_watchers"
+    ]
 }

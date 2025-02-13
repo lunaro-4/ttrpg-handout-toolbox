@@ -14,5 +14,14 @@
     "duration": -1,
     "level": "Заговор",
     "is_ritual": false,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "cleric",
+        "artificer"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "grave_domain",
+        "undying"
+    ]
 }

@@ -17,5 +17,12 @@
     "duration": 60,
     "level": "7",
     "is_ritual": false,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [
+        "wizard",
+        "druid",
+        "sorcerer"
+    ],
+    "classes_tce": [],
+    "archetypes": []
 }

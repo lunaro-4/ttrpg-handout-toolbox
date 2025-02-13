@@ -17,5 +17,19 @@
     "duration": 60,
     "level": "2",
     "is_ritual": false,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [
+        "wizard",
+        "druid",
+        "sorcerer"
+    ],
+    "classes_tce": [
+        "ranger"
+    ],
+    "archetypes": [
+        "tempest_domain",
+        "fathomless",
+        "genie",
+        "way_of_four_elements"
+    ]
 }

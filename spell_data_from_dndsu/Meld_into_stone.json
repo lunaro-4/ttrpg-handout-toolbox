@@ -16,5 +16,16 @@
     "duration": 28800,
     "level": "3",
     "is_ritual": true,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "druid",
+        "cleric"
+    ],
+    "classes_tce": [
+        "ranger"
+    ],
+    "archetypes": [
+        "circle_of_the_land",
+        "genie"
+    ]
 }

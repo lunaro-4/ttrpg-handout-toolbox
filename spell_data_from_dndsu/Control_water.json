@@ -22,5 +22,17 @@
     "duration": 600,
     "level": "4",
     "is_ritual": false,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [
+        "wizard",
+        "druid",
+        "cleric"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "circle_of_the_land",
+        "tempest_domain",
+        "fathomless",
+        "genie"
+    ]
 }

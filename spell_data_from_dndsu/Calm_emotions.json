@@ -18,5 +18,15 @@
     "duration": 60,
     "level": "2",
     "is_ritual": false,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [
+        "bard",
+        "cleric"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "archfey",
+        "oath_of_redemption",
+        "abbrant_mind"
+    ]
 }

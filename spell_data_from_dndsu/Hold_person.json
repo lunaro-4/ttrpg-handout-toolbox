@@ -15,5 +15,22 @@
     "duration": 60,
     "level": "2",
     "is_ritual": false,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [
+        "wizard",
+        "bard",
+        "druid",
+        "cleric",
+        "warlock",
+        "sorcerer"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "circle_of_the_land",
+        "order_domain",
+        "way_of_four_elements",
+        "oath_of_redemption",
+        "oath_of_vengeance",
+        "oath_of_conquest"
+    ]
 }

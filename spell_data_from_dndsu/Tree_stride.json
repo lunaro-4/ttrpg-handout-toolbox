@@ -15,5 +15,15 @@
     "duration": 60,
     "level": "5",
     "is_ritual": false,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [
+        "druid",
+        "ranger"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "circle_of_the_land",
+        "nature_domain",
+        "oath_of_the_ancients"
+    ]
 }

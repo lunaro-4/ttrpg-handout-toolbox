@@ -14,5 +14,11 @@
     "duration": 60,
     "level": "2",
     "is_ritual": false,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "bard",
+        "warlock"
+    ],
+    "classes_tce": [],
+    "archetypes": []
 }

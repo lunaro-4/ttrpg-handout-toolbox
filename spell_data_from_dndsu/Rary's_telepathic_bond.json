@@ -14,5 +14,16 @@
     "duration": 3600,
     "level": "5",
     "is_ritual": true,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "wizard"
+    ],
+    "classes_tce": [
+        "bard"
+    ],
+    "archetypes": [
+        "peace_domain",
+        "abbrant_mind",
+        "lunar_sorcery"
+    ]
 }

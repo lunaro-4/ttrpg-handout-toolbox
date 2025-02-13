@@ -22,5 +22,19 @@
     "duration": -1,
     "level": "1",
     "is_ritual": false,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "cleric",
+        "paladin"
+    ],
+    "classes_tce": [
+        "bard"
+    ],
+    "archetypes": [
+        "knowlege_domain",
+        "order_domain",
+        "fiend",
+        "oath_of_the_crown",
+        "oath_of_conquest"
+    ]
 }

@@ -14,5 +14,16 @@
     "duration": -1,
     "level": "1",
     "is_ritual": false,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "wizard",
+        "sorcerer"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "artillerist",
+        "battle_smith",
+        "hexblade",
+        "lunar_sorcery"
+    ]
 }

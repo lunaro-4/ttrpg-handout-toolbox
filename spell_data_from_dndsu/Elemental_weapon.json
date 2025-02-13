@@ -15,5 +15,17 @@
     "duration": 3600,
     "level": "3",
     "is_ritual": false,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [
+        "artificer",
+        "paladin"
+    ],
+    "classes_tce": [
+        "druid",
+        "ranger"
+    ],
+    "archetypes": [
+        "forge_domain",
+        "hexblade"
+    ]
 }

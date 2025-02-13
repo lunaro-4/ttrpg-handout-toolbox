@@ -14,5 +14,21 @@
     "duration": 3600,
     "level": "4",
     "is_ritual": false,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [
+        "wizard",
+        "druid",
+        "artificer",
+        "ranger",
+        "sorcerer"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "circle_of_the_land",
+        "war_domain",
+        "way_of_four_elements",
+        "oath_of_redemption",
+        "oath_of_conquest",
+        "oath_of_the_ancients"
+    ]
 }

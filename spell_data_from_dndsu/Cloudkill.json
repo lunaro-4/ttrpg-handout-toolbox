@@ -15,5 +15,18 @@
     "duration": 600,
     "level": "5",
     "is_ritual": false,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [
+        "wizard",
+        "sorcerer"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "circle_of_the_land",
+        "circle_of_spores",
+        "death_domain",
+        "alchemist",
+        "undead",
+        "oath_of_conquest"
+    ]
 }

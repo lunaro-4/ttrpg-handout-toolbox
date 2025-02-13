@@ -14,5 +14,16 @@
     "duration": -1,
     "level": "4",
     "is_ritual": false,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "wizard",
+        "druid",
+        "cleric",
+        "artificer"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "circle_of_the_land",
+        "genie"
+    ]
 }

@@ -15,5 +15,11 @@
     "duration": 3600,
     "level": "2",
     "is_ritual": true,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [],
+    "classes_tce": [],
+    "archetypes": [
+        "graviturgy",
+        "chronurgy"
+    ]
 }

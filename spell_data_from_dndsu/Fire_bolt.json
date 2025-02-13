@@ -15,5 +15,12 @@
     "duration": -1,
     "level": "Заговор",
     "is_ritual": false,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "wizard",
+        "artificer",
+        "sorcerer"
+    ],
+    "classes_tce": [],
+    "archetypes": []
 }

@@ -14,5 +14,10 @@
     "duration": 60,
     "level": "Заговор",
     "is_ritual": false,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "druid"
+    ],
+    "classes_tce": [],
+    "archetypes": []
 }

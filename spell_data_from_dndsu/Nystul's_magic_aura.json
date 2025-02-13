@@ -17,5 +17,12 @@
     "duration": 86400,
     "level": "2",
     "is_ritual": false,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "wizard"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "arcana_domain"
+    ]
 }

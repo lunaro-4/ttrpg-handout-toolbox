@@ -16,5 +16,10 @@
     "duration": 28800,
     "level": "2",
     "is_ritual": false,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "ranger"
+    ],
+    "classes_tce": [],
+    "archetypes": []
 }

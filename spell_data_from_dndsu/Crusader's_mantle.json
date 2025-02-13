@@ -14,5 +14,12 @@
     "duration": 60,
     "level": "3",
     "is_ritual": false,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [
+        "paladin"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "war_domain"
+    ]
 }

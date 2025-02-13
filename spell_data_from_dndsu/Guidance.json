@@ -14,5 +14,15 @@
     "duration": 60,
     "level": "Заговор",
     "is_ritual": false,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [
+        "druid",
+        "cleric",
+        "artificer"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "college_of_spirits",
+        "circle_of_stars"
+    ]
 }

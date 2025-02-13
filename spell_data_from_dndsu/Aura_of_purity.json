@@ -14,5 +14,16 @@
     "duration": 600,
     "level": "4",
     "is_ritual": false,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [
+        "paladin"
+    ],
+    "classes_tce": [
+        "cleric"
+    ],
+    "archetypes": [
+        "peace_domain",
+        "battle_smith",
+        "oath_of_the_watchers"
+    ]
 }

@@ -20,5 +20,11 @@
     "duration": 28800,
     "level": "6",
     "is_ritual": false,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "wizard",
+        "warlock"
+    ],
+    "classes_tce": [],
+    "archetypes": []
 }

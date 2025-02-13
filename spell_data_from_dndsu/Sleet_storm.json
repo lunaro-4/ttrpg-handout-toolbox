@@ -16,5 +16,17 @@
     "duration": 60,
     "level": "3",
     "is_ritual": false,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [
+        "wizard",
+        "druid",
+        "sorcerer"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "circle_of_the_land",
+        "tempest_domain",
+        "fathomless",
+        "genie"
+    ]
 }

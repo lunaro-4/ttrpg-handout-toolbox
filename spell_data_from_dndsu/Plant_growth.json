@@ -17,5 +17,18 @@
     "duration": -1,
     "level": "3",
     "is_ritual": false,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "bard",
+        "druid",
+        "ranger"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "circle_of_wildfire",
+        "circle_of_the_land",
+        "nature_domain",
+        "archfey",
+        "oath_of_the_ancients"
+    ]
 }

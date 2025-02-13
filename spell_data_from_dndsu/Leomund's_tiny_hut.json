@@ -16,5 +16,13 @@
     "duration": 28800,
     "level": "3",
     "is_ritual": true,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "wizard",
+        "bard"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "twilight_domain"
+    ]
 }

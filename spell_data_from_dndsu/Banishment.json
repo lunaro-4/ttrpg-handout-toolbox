@@ -17,5 +17,20 @@
     "duration": 60,
     "level": "4",
     "is_ritual": false,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [
+        "wizard",
+        "cleric",
+        "warlock",
+        "paladin",
+        "sorcerer"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "oath_of_the_crown",
+        "oath_of_vengeance",
+        "oath_of_the_watchers",
+        "horrizon_walker",
+        "monster_slayer"
+    ]
 }

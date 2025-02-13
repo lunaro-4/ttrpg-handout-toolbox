@@ -20,5 +20,13 @@
     "duration": -1,
     "level": "Заговор",
     "is_ritual": false,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "druid"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "arcane_archer",
+        "path_of_the_giant"
+    ]
 }

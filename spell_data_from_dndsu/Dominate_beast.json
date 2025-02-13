@@ -18,5 +18,18 @@
     "duration": 60,
     "level": "4",
     "is_ritual": false,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [
+        "druid",
+        "sorcerer"
+    ],
+    "classes_tce": [
+        "ranger"
+    ],
+    "archetypes": [
+        "nature_domain",
+        "archfey",
+        "great_old_one",
+        "oath_of_conquest"
+    ]
 }

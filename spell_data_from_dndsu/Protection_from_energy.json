@@ -14,5 +14,22 @@
     "duration": 3600,
     "level": "3",
     "is_ritual": false,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [
+        "wizard",
+        "druid",
+        "cleric",
+        "artificer",
+        "ranger",
+        "sorcerer"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "circle_of_the_land",
+        "forge_domain",
+        "oath_of_the_ancients",
+        "oath_of_vengeance",
+        "oath_of_glory",
+        "clockwork_soul"
+    ]
 }

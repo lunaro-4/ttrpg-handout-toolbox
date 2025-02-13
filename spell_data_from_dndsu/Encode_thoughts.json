@@ -16,5 +16,8 @@
     "duration": 28800,
     "level": "Заговор",
     "is_ritual": false,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [],
+    "classes_tce": [],
+    "archetypes": []
 }

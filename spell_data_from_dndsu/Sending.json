@@ -15,5 +15,16 @@
     "duration": -1,
     "level": "3",
     "is_ritual": false,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "wizard",
+        "bard",
+        "cleric"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "peace_domain",
+        "great_old_one",
+        "abbrant_mind"
+    ]
 }

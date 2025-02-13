@@ -16,5 +16,14 @@
     "duration": 60,
     "level": "5",
     "is_ritual": true,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "cleric"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "order_domain",
+        "oath_of_devotion",
+        "oath_of_glory"
+    ]
 }

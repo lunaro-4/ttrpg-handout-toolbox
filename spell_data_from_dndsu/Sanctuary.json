@@ -15,5 +15,16 @@
     "duration": 60,
     "level": "1",
     "is_ritual": false,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "cleric",
+        "artificer"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "peace_domain",
+        "genie",
+        "oath_of_redemption",
+        "oath_of_devotion"
+    ]
 }

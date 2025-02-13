@@ -17,5 +17,16 @@
     "duration": 60,
     "level": "1",
     "is_ritual": false,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "wizard",
+        "bard",
+        "sorcerer"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "twilight_domain",
+        "archfey",
+        "oath_of_redemption"
+    ]
 }

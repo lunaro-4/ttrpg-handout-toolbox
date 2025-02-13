@@ -15,5 +15,17 @@
     "duration": 60,
     "level": "1",
     "is_ritual": false,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [
+        "bard",
+        "druid",
+        "artificer"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "light_domain",
+        "twilight_domain",
+        "archfey",
+        "swarmkeeper"
+    ]
 }

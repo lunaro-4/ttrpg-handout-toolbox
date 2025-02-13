@@ -15,5 +15,20 @@
     "duration": 3600,
     "level": "2",
     "is_ritual": false,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [
+        "wizard",
+        "artificer",
+        "paladin"
+    ],
+    "classes_tce": [
+        "ranger",
+        "sorcerer"
+    ],
+    "archetypes": [
+        "war_domain",
+        "forge_domain",
+        "arcana_domain",
+        "oath_of_glory"
+    ]
 }

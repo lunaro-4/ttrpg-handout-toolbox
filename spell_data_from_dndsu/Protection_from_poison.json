@@ -15,5 +15,14 @@
     "duration": 3600,
     "level": "2",
     "is_ritual": false,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "druid",
+        "cleric",
+        "artificer",
+        "paladin",
+        "ranger"
+    ],
+    "classes_tce": [],
+    "archetypes": []
 }

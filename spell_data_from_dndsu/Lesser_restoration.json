@@ -14,5 +14,21 @@
     "duration": -1,
     "level": "2",
     "is_ritual": false,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "bard",
+        "druid",
+        "cleric",
+        "artificer",
+        "paladin",
+        "ranger"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "life_domain",
+        "celestial",
+        "oath_of_devotion",
+        "clockwork_soul",
+        "lunar_sorcery"
+    ]
 }

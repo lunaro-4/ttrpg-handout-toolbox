@@ -15,5 +15,16 @@
     "duration": 864000,
     "level": "2",
     "is_ritual": true,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "wizard",
+        "cleric"
+    ],
+    "classes_tce": [
+        "paladin"
+    ],
+    "archetypes": [
+        "circle_of_spores",
+        "grave_domain"
+    ]
 }

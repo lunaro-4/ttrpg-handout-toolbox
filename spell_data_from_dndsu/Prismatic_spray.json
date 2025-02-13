@@ -22,5 +22,13 @@
     "duration": -1,
     "level": "7",
     "is_ritual": false,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "wizard",
+        "sorcerer"
+    ],
+    "classes_tce": [
+        "bard"
+    ],
+    "archetypes": []
 }

@@ -15,5 +15,12 @@
     "duration": 3600,
     "level": "1",
     "is_ritual": false,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "warlock"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "oath_of_conquest"
+    ]
 }

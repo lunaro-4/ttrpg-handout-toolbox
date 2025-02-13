@@ -15,5 +15,21 @@
     "duration": 600,
     "level": "1",
     "is_ritual": false,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [
+        "wizard",
+        "cleric",
+        "warlock",
+        "paladin"
+    ],
+    "classes_tce": [
+        "druid"
+    ],
+    "archetypes": [
+        "oath_of_devotion",
+        "horrizon_walker",
+        "monster_slayer",
+        "divine_soul",
+        "clockwork_soul"
+    ]
 }

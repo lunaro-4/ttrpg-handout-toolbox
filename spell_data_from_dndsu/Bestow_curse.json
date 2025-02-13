@@ -22,5 +22,15 @@
     "duration": 60,
     "level": "3",
     "is_ritual": false,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [
+        "wizard",
+        "bard",
+        "cleric"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "oath_of_conquest",
+        "oathbreaker"
+    ]
 }

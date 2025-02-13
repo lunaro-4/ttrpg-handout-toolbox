@@ -21,5 +21,19 @@
     "duration": 3600,
     "level": "2",
     "is_ritual": false,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [
+        "bard",
+        "druid",
+        "cleric",
+        "artificer",
+        "sorcerer"
+    ],
+    "classes_tce": [
+        "ranger",
+        "wizard"
+    ],
+    "archetypes": [
+        "oath_of_glory"
+    ]
 }

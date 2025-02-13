@@ -17,5 +17,10 @@
     "duration": 86400,
     "level": "6",
     "is_ritual": true,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "cleric"
+    ],
+    "classes_tce": [],
+    "archetypes": []
 }

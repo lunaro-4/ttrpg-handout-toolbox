@@ -15,5 +15,20 @@
     "duration": -1,
     "level": "1",
     "is_ritual": false,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "bard",
+        "druid",
+        "cleric",
+        "artificer",
+        "paladin",
+        "ranger"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "circle_of_wildfire",
+        "life_domain",
+        "celestial",
+        "divine_soul"
+    ]
 }

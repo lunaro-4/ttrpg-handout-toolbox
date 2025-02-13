@@ -14,5 +14,12 @@
     "duration": -1,
     "level": "6",
     "is_ritual": false,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "wizard",
+        "warlock",
+        "sorcerer"
+    ],
+    "classes_tce": [],
+    "archetypes": []
 }

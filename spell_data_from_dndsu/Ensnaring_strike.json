@@ -16,5 +16,12 @@
     "duration": 60,
     "level": "1",
     "is_ritual": false,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [
+        "ranger"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "oath_of_the_ancients"
+    ]
 }

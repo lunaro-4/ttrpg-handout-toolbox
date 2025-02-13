@@ -14,5 +14,13 @@
     "duration": 3600,
     "level": "2",
     "is_ritual": true,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [
+        "wizard",
+        "bard",
+        "druid",
+        "artificer"
+    ],
+    "classes_tce": [],
+    "archetypes": []
 }

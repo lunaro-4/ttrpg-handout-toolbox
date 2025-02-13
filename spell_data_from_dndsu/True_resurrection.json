@@ -18,5 +18,11 @@
     "duration": -1,
     "level": "9",
     "is_ritual": false,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "druid",
+        "cleric"
+    ],
+    "classes_tce": [],
+    "archetypes": []
 }

@@ -16,5 +16,15 @@
     "duration": 28800,
     "level": "1",
     "is_ritual": true,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "wizard",
+        "artificer",
+        "ranger"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "oath_of_the_watchers",
+        "clockwork_soul"
+    ]
 }

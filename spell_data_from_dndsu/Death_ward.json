@@ -16,5 +16,19 @@
     "duration": 28800,
     "level": "4",
     "is_ritual": false,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "cleric",
+        "paladin"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "life_domain",
+        "death_domain",
+        "grave_domain",
+        "alchemist",
+        "undying",
+        "undead",
+        "lunar_sorcery"
+    ]
 }

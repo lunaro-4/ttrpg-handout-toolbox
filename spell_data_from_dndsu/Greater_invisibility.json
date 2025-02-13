@@ -14,5 +14,20 @@
     "duration": 60,
     "level": "4",
     "is_ritual": false,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [
+        "wizard",
+        "bard",
+        "sorcerer"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "circle_of_the_land",
+        "twilight_domain",
+        "armorer",
+        "archfey",
+        "genie",
+        "undead",
+        "gloom_stalker"
+    ]
 }

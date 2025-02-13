@@ -16,5 +16,13 @@
     "duration": 60,
     "level": "4",
     "is_ritual": false,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [
+        "wizard"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "great_old_one",
+        "abbrant_mind"
+    ]
 }

@@ -17,5 +17,10 @@
     "duration": 3600,
     "level": "1",
     "is_ritual": false,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [
+        "warlock"
+    ],
+    "classes_tce": [],
+    "archetypes": []
 }

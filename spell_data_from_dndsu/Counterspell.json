@@ -15,5 +15,15 @@
     "duration": -1,
     "level": "3",
     "is_ritual": false,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "wizard",
+        "warlock",
+        "sorcerer"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "oath_of_redemption",
+        "oath_of_the_watchers"
+    ]
 }

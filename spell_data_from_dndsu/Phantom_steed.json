@@ -15,5 +15,13 @@
     "duration": 3600,
     "level": "3",
     "is_ritual": true,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "wizard"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "undead",
+        "lunar_sorcery"
+    ]
 }

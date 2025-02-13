@@ -14,5 +14,15 @@
     "duration": 600,
     "level": "1",
     "is_ritual": true,
-    "requires_concentration": false
+    "requires_concentration": false,
+    "classes": [
+        "bard",
+        "druid",
+        "ranger"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "nature_domain",
+        "oath_of_the_ancients"
+    ]
 }

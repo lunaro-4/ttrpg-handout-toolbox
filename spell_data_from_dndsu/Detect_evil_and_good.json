@@ -15,5 +15,13 @@
     "duration": 600,
     "level": "1",
     "is_ritual": false,
-    "requires_concentration": true
+    "requires_concentration": true,
+    "classes": [
+        "cleric",
+        "paladin"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "genie"
+    ]
 }
