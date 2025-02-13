@@ -132,6 +132,22 @@ class TemplateHandler:
 
         pass
 
+    def get_level_tag(self, level: int, add_as_picture: bool = False) -> Tag:
+        if add_as_picture:
+            level_tag: Tag = self.soup.new_tag("img")
+            level_picture_string = f'src/lvl_{level}_spell.png'
+            level_tag['src'] = level_picture_string
+        else:
+            level_tag: Tag = self.soup.new_tag("p")
+            level_tag.string = RussianTranslations.SPELL_LEVELS[level]
+
+        return level_tag
+
+    def decorate_material_component(self, material_component: str) -> str:
+        string_to_return: str = RussianTranslations.Components.material_component_text
+        string_to_return += f'<em>{material_component}</em>\n'
+        return string_to_return
+
 
 
     def find_elements_by_box(self, box_value: str) -> Tag | None:

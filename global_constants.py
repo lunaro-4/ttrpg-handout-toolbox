@@ -136,6 +136,27 @@ class RussianTranslations:
         ft:str = "футов"
         other: str = "Особое"
 
+    # class SpellLevels:
+    #     cantrip: str = "Заговор"
+    #     leveled_spell_level: str = "Уровень"
+    class Components:
+        verbal: str = "В"
+        somatic: str = "С"
+        material: str = "М"
+        material_component_text: str = "Материальный компонент: "
+
+    SPELL_LEVELS: dict[int, str]= {
+            0: "Заговор",
+            1: "Уровень I",
+            2: "Уровень II",
+            3: "Уровень III",
+            4: "Уровень IV",
+            5: "Уровень V",
+            6: "Уровень VI",
+            7: "Уровень VII",
+            8: "Уровень IIX",
+            9: "Уровень IX",
+            }
 
 
 
