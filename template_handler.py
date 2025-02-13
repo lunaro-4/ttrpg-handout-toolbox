@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup, Tag
 from html2image import Html2Image
 import shutil
 import os
+from global_constants import RussianTranslations
+
 
 DEFAULT_TEMPLATE = "basic-template"
 OUTP_HTML = "build/outp.html"
@@ -21,20 +23,6 @@ class TemplateHandler:
         description: str = "description"
         spell_info:str = "spell-info"
         spell_name: str = "spell-name"
-
-    class TRANSLATIONS:
-        bonus_action: str = "Бонусное действие"
-        action: str = "Действие"
-        hour: str = "часов"
-        minute: str = "минут"
-        second: str = "секунд"
-        day: str = "дней"
-        week: str = "недель"
-        month: str = "месяцев"
-        other: str = "Особое"
-        on_self: str = "На себя"
-        on_touch: str = "Касание"
-        ft:str = "футов"
 
     class ParsedStrings:
         def __init__(self) -> None:
@@ -88,31 +76,31 @@ class TemplateHandler:
     def translate_duration(self, duration_value: int, is_action: bool = False) -> str:
         if is_action:
             if duration_value == 2:
-                return self.TRANSLATIONS.bonus_action
+                return RussianTranslations.Actions.bonus_action
             if duration_value == 4:
-                return self.TRANSLATIONS.action
+                return RussianTranslations.Actions.action
             if duration_value == 6:
-                return self.TRANSLATIONS.action + 'и' + self.TRANSLATIONS.bonus_action
+                return RussianTranslations.Actions.action + 'и' + RussianTranslations.Actions.bonus_action
         if duration_value%(3600*7*24) == 0:
-            return f'{int(duration_value/(3600*7*24))} {self.TRANSLATIONS.week}'
+            return f'{int(duration_value/(3600*7*24))} {RussianTranslations.Time.week}'
         if duration_value%(3600*24) == 0:
-            return f'{int(duration_value/(3600*24))} {self.TRANSLATIONS.day}'
+            return f'{int(duration_value/(3600*24))} {RussianTranslations.Time.day}'
         if duration_value%(3600) == 0:
-            return f'{int(duration_value/(3600))} {self.TRANSLATIONS.hour}'
+            return f'{int(duration_value/(3600))} {RussianTranslations.Time.hour}'
         if duration_value%(60) == 0:
-            return f'{int(duration_value/(60))} {self.TRANSLATIONS.minute}'
+            return f'{int(duration_value/(60))} {RussianTranslations.Time.minute}'
         if duration_value != -1:
-            return f'{int(duration_value)} {self.TRANSLATIONS.second}'
-        return self.TRANSLATIONS.other
+            return f'{int(duration_value)} {RussianTranslations.Time.second}'
+        return RussianTranslations.Time.other
 
     def translate_distance(self, distance_value: int) -> str:
         match distance_value:
             case 0:
-                return self.TRANSLATIONS.on_self
+                return RussianTranslations.Distance.on_self
             case 5:
-                return self.TRANSLATIONS.on_touch
+                return RussianTranslations.Distance.on_touch
             case _:
-                return f'{distance_value} {self.TRANSLATIONS.ft}'
+                return f'{distance_value} {RussianTranslations.Distance.ft}'
 
 
     def populate_parsed_strings(self) -> None:
@@ -189,7 +177,8 @@ class TemplateHandler:
             return file_list
 
         file_path: str = self.screenshot_options['save_as']
-        file_name = file_path[file_path.find('/')+1:]
+        file_name_index: int = file_path[::-1].find('/')
+        file_name = file_path[-file_name_index:]
         self.screenshot_options['save_as'] = file_name
         hti = Html2Image(temp_path='build')
         hti.screenshot(**self.screenshot_options)
