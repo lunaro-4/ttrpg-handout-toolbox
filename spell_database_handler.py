@@ -1,5 +1,5 @@
-
 from html2image.html2image import os
+from PIL import Image
 from icecream import ic
 from spell_handler import Spell
 from template_handler import TemplateHandler
@@ -60,7 +60,7 @@ class SpellDatabase:
 
 
     @staticmethod
-    def render_spells_to_folder(folder: str, classes_to_specify: list[str] | None = None, *spells: Spell) -> None:
+    def render_spells_to_folder(folder: str, /, *spells: Spell, classes_to_specify: list[str] | None = None, restrict_to: int | None = None) -> None:
         def convert_components_to_string(component_dict: dict[str, bool]) -> str:
             return_list: list[str] = []
             if component_dict.get('verbal'):
@@ -86,6 +86,9 @@ class SpellDatabase:
                 casting_time_element.string = th.translate_duration(casting_time_value, is_action=True)
                 th.append_tag_to_element(th.CONSTANT_BOX_NAMES.casting_time, casting_time_element)
 
+        if restrict_to:
+            spells = spells[:restrict_to]
+
         for spell in spells:
             print(f'Processing spell {spell.get_name()}')
             th = TemplateHandler()
@@ -93,9 +96,6 @@ class SpellDatabase:
             th.set_element_text(th.CONSTANT_BOX_NAMES.spell_name, spell.get_name_ru())
             description_to_set: str = spell.get_description()
             material_component = spell.get_material_component()
-            ic(spell.get_components())
-            ic(spell.get_components()['material'])
-            ic(material_component)
 
             if spell.get_components()['material'] and material_component:
                 description_to_set = th.decorate_material_component(material_component) + description_to_set
@@ -115,8 +115,9 @@ class SpellDatabase:
             casting_time_set_picture(th, casting_time_value)
 
 
+            is_ritual: bool = spell.get_is_ritual()
 
-            if spell.get_is_ritual():
+            if is_ritual:
                 th.append_picture(th.CONSTANT_BOX_NAMES.spell_info, 'src/ritual.png')
                 
                 
@@ -132,6 +133,45 @@ class SpellDatabase:
             th.render(file_path=file_name)
 
         
+    @staticmethod
+    def combine_images_to_printable(input_directory: str, output_directory: str) -> None:
+        images: list[str] = os.listdir(input_directory)
+        for image_filename in images.copy():
+            if image_filename[-3:] != 'png':
+                print(f'{image_filename} is not a png, skpping')
+                images.remove(image_filename)
+
+        A4_SIZE_300_DPI = (2480, 3508)
+        A4_SIZE_150_DPI = (1240, 1754)
+        input_counter: int = 0
+        sheets_counter: int = 0
+        images_on_sheet: int = 4
+
+        range_value = int(len(images)/images_on_sheet)
+        if len(images)%images_on_sheet:
+            range_value += 1
+        for sheet_id in range(0, range_value):
+            image_group = images[:range_value+1]
+            sheet = Image.new('RGB', A4_SIZE_150_DPI, color='white')
+            last_height = 0
+            last_width = 0
+            in_row = 2
+            for i ,image_filename in enumerate(image_group):
+                image_filename = input_directory + '/' + image_filename
+                image: Image.Image = Image.open(image_filename)
+                sheet.paste(image, (last_width, last_height))
+                if i%in_row and i != 0:
+                    last_height += image.height
+                    last_width = 0
+                else:
+                    last_width += image.width
+            sheet.save(f'outp{sheet_id}.png')
+            images = images[range_value+1:]
+            
+
+
+
+        pass
 
 
 
