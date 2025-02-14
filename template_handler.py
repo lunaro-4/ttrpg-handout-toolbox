@@ -14,7 +14,6 @@ DEFAULT_SIZE = (408, 700)
 class TemplateHandler:
     screenshot_options: dict = {
             "html_file": 'build/html_outp/outp.html',
-            "css_file": 'build/html_outp/outp.css',
             }
     class CONSTANT_BOX_NAMES:
         components: str = "components"
