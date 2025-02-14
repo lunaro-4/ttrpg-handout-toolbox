@@ -196,6 +196,38 @@ class DndSuParser(ParsingBoss):
         self.names_to_values: dict[str, DndSuParser.ParsedRawSpell] = {}
         self.names_to_soups: dict[str, BeautifulSoup]
 
+    def __parse_duaration_multiplyer(self, raw_duration: str) -> int:
+        st = DndSuParser.StaticTranslations()
+        if raw_duration.find(st.HOURS) != -1:
+            duration_value_name = 'h'
+            return 3600
+        elif raw_duration.find(st.MINUTES) != -1:
+            duration_value_name = "m"
+            return 60
+        elif raw_duration.find(st.SECONDS) != -1:
+            duration_value_name = "s"
+        elif raw_duration.find(st.INSTANT) != -1:
+            return 0
+        elif raw_duration.find(st.DAYS_1) + raw_duration.find(st.DAYS_2) + raw_duration.find(st.DAYS_3) != -3:
+            duration_value_name = 'd'
+            return 3600*24
+        elif raw_duration.find(st.WEEK) != -1:
+            duration_value_name = 'w'
+            return 3600 * 24 * 7
+        return -1
+
+    def __clean_duration(self, raw_duration: str) -> int:
+        raw_duration =  re.sub(r'(.+?)(\d+ )', r"\2", raw_duration)
+
+        duration_multiplier: int = self.__parse_duaration_multiplyer(raw_duration)
+        if duration_multiplier == -1:
+            return -1
+
+        duration_value: str = re.sub(r'\D', "" , raw_duration)
+        if duration_value.isnumeric():
+            return int(duration_value)*duration_multiplier
+        return -1
+
     def __get_spell_list_from_html(self, raw_html: str) -> list[dict]:
         soup = BeautifulSoup(raw_html, features="html.parser")
         spells_raw_encoded: str = soup.find_all(name="script")[-3].text
@@ -204,16 +236,6 @@ class DndSuParser(ParsingBoss):
         spells_dict = ast.literal_eval(spells_raw_refined)
         print(f'Found {len(spells_dict)} spells ')
         return spells_dict['cards']
-
-    def __get_classes_from_query(self, classes_list: list[str | int]) -> list[str]:
-        refined_classes: list[str] = []
-        for class_id in classes_list:
-            refined_classes.append(self.CLASS_ARCHETYPE_CODE_TRANSLATION[class_id])
-        return refined_classes
-    def __get_level_from_query(self, level: str) -> int:
-        if level.casefold() == 'Заговор'.casefold():
-            return 0
-        return int(level)
 
 
         
@@ -276,9 +298,6 @@ class DndSuParser(ParsingBoss):
             names_to_soups[spell] = self._ParsingBoss__get_soup_from_file(file)
         self.names_to_soups = names_to_soups
 
-    def restrict_by_class(self, class_name: str) -> None:
-
-        pass
 
     def __clean_distance(self, raw_distance: str) -> int:
         raw_distance = raw_distance.casefold().strip()
@@ -292,7 +311,6 @@ class DndSuParser(ParsingBoss):
             return int(processed_distance)
         return -1
 
-            
 
     def __get_description_from_soup(self, soup: BeautifulSoup) -> str:
         subsec= soup.find(name="div", itemprop="description")
@@ -323,39 +341,6 @@ class DndSuParser(ParsingBoss):
                         return self.__clean_distance(child.text)
                     break
         return 0
-
-    def __parse_duaration_multiplyer(self, raw_duration: str) -> int:
-        st = DndSuParser.StaticTranslations()
-        if raw_duration.find(st.HOURS) != -1:
-            duration_value_name = 'h'
-            return 3600
-        elif raw_duration.find(st.MINUTES) != -1:
-            duration_value_name = "m"
-            return 60
-        elif raw_duration.find(st.SECONDS) != -1:
-            duration_value_name = "s"
-        elif raw_duration.find(st.INSTANT) != -1:
-            return 0
-        elif raw_duration.find(st.DAYS_1) + raw_duration.find(st.DAYS_2) + raw_duration.find(st.DAYS_3) != -3:
-            duration_value_name = 'd'
-            return 3600*24
-        elif raw_duration.find(st.WEEK) != -1:
-            duration_value_name = 'w'
-            return 3600 * 24 * 7
-        return -1
-
-    def __clean_duration(self, raw_duration: str) -> int:
-        raw_duration =  re.sub(r'(.+?)(\d+ )', r"\2", raw_duration)
-
-        duration_multiplier: int = self.__parse_duaration_multiplyer(raw_duration)
-        if duration_multiplier == -1:
-            return -1
-
-        duration_value: str = re.sub(r'\D', "" , raw_duration)
-        if duration_value.isnumeric():
-            return int(duration_value)*duration_multiplier
-        return -1
-
 
     def __get_duration_and_concentration_from_soup(self, soup: BeautifulSoup) -> tuple[int, bool]:
         """ Returns values in format: 'duration_value, value_name, requires_concentration' """
@@ -412,18 +397,28 @@ class DndSuParser(ParsingBoss):
 
         return self.__clean_duration(raw_casting_time)
 
-        
+    def __get_classes_from_query(self, classes_list: list[str | int]) -> list[str]:
+        refined_classes: list[str] = []
+        for class_id in classes_list:
+            refined_classes.append(self.CLASS_ARCHETYPE_CODE_TRANSLATION[class_id])
+        return refined_classes
 
-
-
+    def __get_level_from_query(self, level: str) -> int:
+        if level.casefold() == 'Заговор'.casefold():
+            return 0
+        return int(level)
 
     def __get_data_from_soups(self) -> None:
         if not self.names_to_soups: 
             print("ERROR: soups dictionaty is not populated! Run 'update_links' first!", file=sys.stderr)
             exit()
+        print('==============================')
         print("Getting data from soups")
+        print('==============================')
         for name, soup in self.names_to_soups.items():
-            print(f'Processing {name}, ', end='\t')
+            # print(f'Processing {name}, ', end='\t')
+            print(f'Processing {name}')
+
             prs = DndSuParser.ParsedRawSpell()
             desc = self.__get_description_from_soup(soup)
             mater_component = self.__get_material_component_from_soup(soup)
@@ -455,7 +450,12 @@ class DndSuParser(ParsingBoss):
                 "somatic": has_somatic,
                 "material": has_material
                 }
-        is_ritual = bool(int(spell_info['filter_ritual'][0])-1)
+
+        is_ritual = spell_info['filter_ritual'][0]
+        is_ritual = int(is_ritual)
+        is_ritual = bool(is_ritual-1)
+        # is_ritual = bool(int(spell_info['filter_ritual'][0])-1)
+        
         new_spell_dict: dict = {
                 "name_ru": spell_name,
                 "name": spell_info['title_en'],
@@ -466,7 +466,8 @@ class DndSuParser(ParsingBoss):
                 "distance":prs['distance'],
                 "duration":prs['duration'],
                 "level": self.__get_level_from_query(spell_info['level']),
-                "is_ritual":is_ritual, "requires_concentration":prs['has_concentration'],
+                "is_ritual": is_ritual,
+                "requires_concentration":prs['has_concentration'],
                 "classes": classes,
                 "classes_tce": classes_tce,
                 "archetypes": archetypes
