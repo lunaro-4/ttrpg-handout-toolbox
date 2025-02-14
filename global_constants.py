@@ -162,6 +162,11 @@ class RussianTranslations:
 
 
 
+class BasicTemplateColorschemes:
+    druid_colorscheme: str = """
+
+
+    """
 
 
 
