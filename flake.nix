@@ -25,6 +25,7 @@
 				# wkhtmltopdf
 				# libstdcxx5
 				chromium
+				vscode-langservers-extracted
 
 
 			];
