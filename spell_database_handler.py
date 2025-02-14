@@ -121,10 +121,12 @@ class SpellDatabase:
 
 
             is_ritual: bool = spell.get_is_ritual()
-
             if is_ritual:
                 th.append_picture(th.CONSTANT_BOX_NAMES.spell_info, 'src/ritual.png')
                 
+            requires_concentration: bool = spell.get_requires_concentration()
+            if requires_concentration:
+                th.append_picture(th.CONSTANT_BOX_NAMES.spell_info, 'src/concentration.png')
                 
 
 
