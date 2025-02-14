@@ -60,7 +60,12 @@ class SpellDatabase:
 
 
     @staticmethod
-    def render_spells_to_folder(folder: str, /, *spells: Spell, classes_to_specify: list[str] | None = None, restrict_to: int | None = None) -> None:
+    def render_spells_to_folder(folder: str, /, *spells: Spell,
+                                classes_to_specify: list[str] | None = None,
+                                restrict_to: int | None = None,
+                                custom_css: str | None = None
+                                ) -> None:
+
         def convert_components_to_string(component_dict: dict[str, bool]) -> str:
             return_list: list[str] = []
             if component_dict.get('verbal'):
@@ -130,7 +135,7 @@ class SpellDatabase:
             # th.append_tag_to_element(th.CONSTANT_BOX_NAMES.description , description_element)
 
             file_name: str = folder + '/' + spell.get_file_name() + '.png'
-            th.render(file_path=file_name)
+            th.render(file_path=file_name, custom_css=custom_css)
 
         
     @staticmethod
