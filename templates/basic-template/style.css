@@ -3,9 +3,9 @@
 }
 :root {
 
-	--background: rgba(29, 40, 55, 1);
-	--property-name-background: rgba(249, 192, 118, 1);
-	--property-window-background: rgba(255, 229, 194, 1);
+	--primary-color: #553b24;
+	--secondary-color: rgba(249, 192, 118, 1);
+	--accent-color: rgba(255, 229, 194, 1);
 
 }
 body {
@@ -26,7 +26,7 @@ p {
 }
 .heading{
 	margin:0;
-	color:var(--background);
+	color:var(--primary-color);
 }
 .text-content{
 	line-height:20px;
@@ -52,11 +52,11 @@ p {
 	justify-content:center;
 	align-items:center;
 	border-radius:18px;
-	background-color:var(--property-name-background);
+	background-color:var(--secondary-color);
 	width:119px;
 }
 .property-window{
-	background-color:var(--property-window-background);
+	background-color:var(--accent-color);
 	border-top-left-radius:18px;
 	border-top-right-radius:18px;
 	border-bottom-right-radius:18px;
@@ -142,7 +142,7 @@ h1{
 	overflow: hidden;
 }
 #background-box {
-	background-color: #553b24;
+	background-color: var(--primary-color);
 	flex: 0 1 auto;
 	align-items: stretch;
 	justify-content: flex-start;

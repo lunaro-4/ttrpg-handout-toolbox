@@ -14,6 +14,7 @@ DEFAULT_SIZE = (408, 700)
 class TemplateHandler:
     screenshot_options: dict = {
             "html_file": 'build/html_outp/outp.html',
+            "css_file": 'build/html_outp/outp.css',
             }
     class CONSTANT_BOX_NAMES:
         components: str = "components"
@@ -58,12 +59,12 @@ class TemplateHandler:
         self.populate_parsed_strings()
 
 
-    def render(self, size: tuple[int, int] = DEFAULT_SIZE, file_path: str = DEFAULT_OUTP_NAME) -> None:
+    def render(self, size: tuple[int, int] = DEFAULT_SIZE, file_path: str = DEFAULT_OUTP_NAME, custom_css: str | None = None) -> None:
         self.screenshot_options['size'] = size
         self.screenshot_options['save_as'] = file_path
         self.clean_build()
         self.generate_symlinks(self.template)
-        self.render_html()
+        self.render_html(custom_css)
         self.render_image()
         self.clean_build()
 
@@ -169,9 +170,17 @@ class TemplateHandler:
         if not os.path.exists(f'{build_dir}/html_outp'):
             os.mkdir(f'{build_dir}/html_outp')
 
-    def render_html(self):
+    def render_html(self, custom_css: str | None = None):
+        if custom_css:
+            style = self.soup.new_tag("style")
+            style.string = custom_css
+            head = self.soup.find("head")
+            if head:
+                head.append(style)
         with open('build/html_outp/outp.html', 'wb') as outp_file:
             outp_file.write(self.soup.encode())
+
+
 
     def generate_symlinks(self, template_name: str) -> None:
         files: list[str] = os.listdir('templates/'+template_name)
