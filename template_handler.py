@@ -145,7 +145,7 @@ class TemplateHandler:
 
     def decorate_material_component(self, material_component: str) -> str:
         string_to_return: str = RussianTranslations.Components.material_component_text
-        string_to_return += f'<em>{material_component}</em>\n'
+        string_to_return = f'<em><b>{string_to_return}</b>{material_component}</em>\n\n'
         return string_to_return
 
 
@@ -196,7 +196,7 @@ class TemplateHandler:
         file_name_index: int = file_path[::-1].find('/')
         file_name = file_path[-file_name_index:]
         self.screenshot_options['save_as'] = file_name
-        hti = Html2Image(temp_path='build')
+        hti = Html2Image(temp_path='build', custom_flags=['--disable-logging', '--log-level 3'], disable_logging=True) # , '--headless=new'
         hti.screenshot(**self.screenshot_options)
         shutil.move(file_name, file_path)
 
