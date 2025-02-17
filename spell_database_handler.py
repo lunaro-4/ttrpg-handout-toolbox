@@ -19,6 +19,7 @@ class SpellDatabase:
             print('No spells loaded, aborting!')
         self.map_names_to_spells()
         self.populate_classes_maps()
+        self.populate_levels_maps()
         pass
 
     def load_spell_from_json(self, path_to_file: str) -> None:
@@ -37,6 +38,20 @@ class SpellDatabase:
         self.name_to_spell: dict[str, Spell] = {}
         for spell in self.spells:
             self.name_to_spell[spell.get_name()] = spell
+
+    def populate_levels_maps(self) -> None:
+        def add_to_map(map: dict[int, list[Spell]], key: int, value: str | None) -> None:
+            if key not in map.keys():
+                map[key] = []
+            if value:
+                map[key].append(self.name_to_spell[value])
+
+        self.level_to_spells: dict[int, list[Spell]] = {}
+
+        for spell in self.spells:
+            spell_name: str = spell.get_name()
+            spell_level: int = spell.get_level()
+            add_to_map(self.level_to_spells, spell_level, spell_name)
 
 
     def populate_classes_maps(self):
@@ -98,7 +113,7 @@ class SpellDatabase:
             spells = spells[:restrict_to]
 
         for spell in spells:
-            print(f'Processing spell {spell.get_name()}')
+            print(f'Rendering spell {spell.get_name()}')
             th = TemplateHandler()
             soup = th.soup
             th.set_element_text(th.CONSTANT_BOX_NAMES.spell_name, spell.get_name_ru())
@@ -174,7 +189,7 @@ class SpellDatabase:
                 else:
                     last_width += image.width
             sheet.save(f'{output_directory}/outp{sheet_id}.png')
-            images = images[images_on_sheet+1:]
+            images = images[images_on_sheet:]
             
 
 
