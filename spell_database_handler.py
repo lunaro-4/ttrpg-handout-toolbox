@@ -150,15 +150,13 @@ class SpellDatabase:
 
         A4_SIZE_300_DPI = (2480, 3508)
         A4_SIZE_150_DPI = (1240, 1754)
-        input_counter: int = 0
-        sheets_counter: int = 0
         images_on_sheet: int = 4
 
         range_value = int(len(images)/images_on_sheet)
         if len(images)%images_on_sheet:
             range_value += 1
         for sheet_id in range(0, range_value):
-            image_group = images[:range_value+1]
+            image_group = images[:images_on_sheet]
             sheet = Image.new('RGB', A4_SIZE_150_DPI, color='white')
             last_height = 0
             last_width = 0
@@ -172,8 +170,8 @@ class SpellDatabase:
                     last_width = 0
                 else:
                     last_width += image.width
-            sheet.save(f'outp{sheet_id}.png')
-            images = images[range_value+1:]
+            sheet.save(f'{output_directory}/outp{sheet_id}.png')
+            images = images[images_on_sheet+1:]
             
 
 
