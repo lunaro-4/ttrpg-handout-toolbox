@@ -1,25 +1,27 @@
-* {
-	box-sizing: border-box;
-}
 :root {
 
 	--primary-color: #553b24;
-	--secondary-color: rgba(249, 192, 118, 1);
-	--accent-color: rgba(255, 229, 194, 1);
+	--secondary-color: rgba(255, 229, 194, 1);
+	--accent-color: rgba(249, 192, 118, 1);
+	--text-color: #000000;
 
 }
-body {
-	margin: 0;
-}
+
+
+
+
+
+
 *{
 	box-sizing:border-box;
 }
 body{
 	margin:0;
+	color:var(--text-color);
 }
 img{
-	height:50px;
-	width:50px;
+	height:40px;
+	width:40px;
 }
 h1{
 	text-align:center;
@@ -57,11 +59,11 @@ p {
 	justify-content:center;
 	align-items:center;
 	border-radius:18px;
-	background-color:var(--secondary-color);
+	background-color:var(--accent-color);
 	width:119px;
 }
 .property-window{
-	background-color:var(--accent-color);
+	background-color:var(--secondary-color);
 	border-top-left-radius:18px;
 	border-top-right-radius:18px;
 	border-bottom-right-radius:18px;
