@@ -163,8 +163,22 @@ class RussianTranslations:
 
 
 class BasicTemplateColorschemes:
-    druid_colorscheme: str = """
+    circle_of_spores_colorscheme: str = """
+    :root {
+    --primary-color:#642D0F;
+    --secondary-color:#CDA88E;
+    --accent-color:#995A39;
+    --text-color:#000000
+    }
 
+    """
+    druid_colorscheme: str = """
+    :root {
+    --primary-color:#5C2A21;
+    --secondary-color:#F7A45E;
+    --accent-color:#B25033;
+    --text-color:#000000
+    }
 
     """
 
