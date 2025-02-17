@@ -57,6 +57,9 @@ class SpellDatabase:
             spell_name: str = spell.get_name()
             for class_name in total_classes:
                 add_to_map(self.class_to_spells, class_name, spell_name)
+    @staticmethod
+    def find_intersections(list1: list[Spell], list2: list[Spell]) -> list[Spell]:
+        return list(set(list1).intersection(list2))
 
 
     @staticmethod

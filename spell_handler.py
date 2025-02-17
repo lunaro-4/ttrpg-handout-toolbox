@@ -52,6 +52,7 @@ class Spell:
     
     def __eq__(self, other) -> bool:
         return self.get_name() == other.get_name()
+    def __hash__(self) -> int:
 
     def save_to_json(self, save_path: str) -> None:
         with open(f'{save_path}', "w") as file:
