@@ -17,7 +17,7 @@ class SpellDatabase:
     def process_spells(self) -> None:
         if not self.spells:
             print('No spells loaded, aborting!')
-        self.map_names_to_spells()
+        self.map_names_to_spells(parse_english_names=True)
         self.populate_classes_maps()
         self.populate_levels_maps()
         pass
@@ -34,10 +34,19 @@ class SpellDatabase:
                 continue
             self.load_spell_from_json(path_to_directory + '/' + file)
 
-    def map_names_to_spells(self) -> None:
-        self.name_to_spell: dict[str, Spell] = {}
+    def map_names_to_spells(self, parse_english_names: bool = True) -> None:
+        spell_dict: dict[str, Spell] = {}
         for spell in self.spells:
-            self.name_to_spell[spell.get_name()] = spell
+            if parse_english_names:
+                spell_name = spell.get_name()
+            else:
+                spell_name = spell.get_name_ru()
+            spell_dict[spell_name] = spell
+        if parse_english_names:
+            self.name_to_spell: dict[str, Spell] = spell_dict
+        else:
+            ic('fire!')
+            self.translated_name_to_spell: dict[str, Spell] = spell_dict
 
     def populate_levels_maps(self) -> None:
         def add_to_map(map: dict[int, list[Spell]], key: int, value: str | None) -> None:
@@ -52,6 +61,29 @@ class SpellDatabase:
             spell_name: str = spell.get_name()
             spell_level: int = spell.get_level()
             add_to_map(self.level_to_spells, spell_level, spell_name)
+
+    def __get_single_spell_by_name(self, names_to_spells: dict[str, Spell], spell_name: str) -> Spell | None:
+        for name, spell in names_to_spells.items():
+            is_same_spell: bool = spell_name.casefold() in name.casefold()
+            if is_same_spell:
+                return spell
+        return None
+
+    def get_spells_by_names(self, /, *spell_names: str,
+                            parse_english_names: bool = True
+                            ) -> list[Spell]:
+        if parse_english_names:
+            names_to_spells = self.name_to_spell
+        else:
+            self.map_names_to_spells(parse_english_names=False)
+            names_to_spells = self.translated_name_to_spell
+        return_list: list[Spell] = []
+        for spell_name in spell_names:
+            found_spell = self.__get_single_spell_by_name(names_to_spells, spell_name)
+            if found_spell:
+                return_list.append(found_spell)
+        return return_list
+    
 
 
     def populate_classes_maps(self):
