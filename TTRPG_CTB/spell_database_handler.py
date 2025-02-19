@@ -1,9 +1,11 @@
 from typing import Annotated, Callable, Literal
 from html2image.html2image import os
 from PIL import Image
-from icecream import ic
 from .spell_handler import Spell
 from .template_handler import TemplateHandler
+import logging
+
+logger = logging.getLogger("TTRPG_CTB_logger")
 
 
 class SpellDatabase:
@@ -19,7 +21,7 @@ class SpellDatabase:
 
     def process_spells(self) -> None:
         if not self.spells:
-            print('No spells loaded, aborting!')
+            logging.error('No spells loaded, aborting!')
         self.map_names_to_spells(parse_english_names=True)
         self.populate_classes_maps()
         self.populate_levels_maps()
@@ -31,11 +33,13 @@ class SpellDatabase:
 
     def load_spells_form_directory(self, path_to_directory: str) -> None:
         files: list[str] = os.listdir(path_to_directory)
+        logging.info(f'found {len(files)} files in {path_to_directory}')
         for file in files:
             if not file[-4:] == "json":
-                print(f'{file} is not a json, skipping')
+                logging.warning(f'{file} is not a json, skipping')
                 continue
             self.load_spell_from_json(path_to_directory + '/' + file)
+
     def map_names_to_spells(self, parse_english_names: bool = True) -> None:
         spell_dict: dict[str, Spell] = {}
         for spell in self.spells:
@@ -47,7 +51,6 @@ class SpellDatabase:
         if parse_english_names:
             self.name_to_spell: dict[str, Spell] = spell_dict
         else:
-            ic('fire!')
             self.translated_name_to_spell: dict[str, Spell] = spell_dict
 
     def populate_levels_maps(self) -> None:

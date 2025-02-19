@@ -1,7 +1,9 @@
 import json
 import typing
+import logging
 
 
+logger = logging.getLogger("TTRPG_CTB_logger")
 
 
 class Spell:
@@ -36,13 +38,13 @@ class Spell:
         """
         loaded_data: dict = {}
         if not spell_path[-4:] == "json":
-            print(f'{spell_path} is not a json')
+            logging.error(f'{spell_path} is not a json')
             raise Exception
         with open(spell_path, 'r') as f:
             try:
                 loaded_data =  json.load(f, strict=False)
             except Exception as e:
-                print(spell_path)
+                logging.error(spell_path)
                 raise e
 
         for component, value in loaded_data['components'].items():

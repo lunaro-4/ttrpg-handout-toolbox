@@ -5,8 +5,10 @@ import shutil
 import os
 # from global_constants import self.Translations
 from .translations import Translations
+import logging
 
 
+logger = logging.getLogger("TTRPG_CTB_logger")
 
 
 
@@ -57,6 +59,7 @@ class TemplateHandler:
 
 
     def render(self, size: tuple[int, int], file_path: str, /, custom_css: str | None = None, clean_after_rendering: bool = True) -> None:
+        logger.info(f"rendering {file_path}")
         self.screenshot_options['size'] = size
         self.screenshot_options['save_as'] = file_path
         self.clean_build()
@@ -67,39 +70,45 @@ class TemplateHandler:
             self.clean_build()
 
     def get_soup(self):
+        logger.info('getting soup')
         with open(f'{self.template}/index.html') as html_file:
             content = html_file.read()
             self.soup = BeautifulSoup(content, features="html.parser")
 
 
     def translate_duration(self, duration_value: int, is_action: bool = False) -> str:
+        return_string: str = ''
         if is_action:
             if duration_value == 2:
-                return self.Translations.Actions.bonus_action
+                return_string =  self.Translations.Actions.bonus_action
             if duration_value == 4:
-                return self.Translations.Actions.action
+                return_string =  self.Translations.Actions.action
             if duration_value == 6:
-                return self.Translations.Actions.action + 'и' + self.Translations.Actions.bonus_action
+                return_string =  self.Translations.Actions.action + 'и' + self.Translations.Actions.bonus_action
         if duration_value%(3600*7*24) == 0:
-            return f'{int(duration_value/(3600*7*24))} {self.Translations.Time.week}'
+            return_string =  f'{int(duration_value/(3600*7*24))} {self.Translations.Time.week}'
         if duration_value%(3600*24) == 0:
-            return f'{int(duration_value/(3600*24))} {self.Translations.Time.day}'
+            return_string =  f'{int(duration_value/(3600*24))} {self.Translations.Time.day}'
         if duration_value%(3600) == 0:
-            return f'{int(duration_value/(3600))} {self.Translations.Time.hour}'
+            return_string =  f'{int(duration_value/(3600))} {self.Translations.Time.hour}'
         if duration_value%(60) == 0:
-            return f'{int(duration_value/(60))} {self.Translations.Time.minute}'
+            return_string =  f'{int(duration_value/(60))} {self.Translations.Time.minute}'
         if duration_value != -1:
-            return f'{int(duration_value)} {self.Translations.Time.second}'
-        return self.Translations.Time.other
+            return_string =  f'{int(duration_value)} {self.Translations.Time.second}'
+        return_string =  self.Translations.Time.other
+        logger.info(f'Translated {duration_value} to {return_string}')
+        return return_string
 
     def translate_distance(self, distance_value: int) -> str:
+        return_string: str = ''
         match distance_value:
             case 0:
-                return self.Translations.Distance.on_self
+                return_string =  self.Translations.Distance.on_self
             case 5:
-                return self.Translations.Distance.on_touch
+                return_string =  self.Translations.Distance.on_touch
             case _:
-                return f'{distance_value} {self.Translations.Distance.ft}'
+                return_string =  f'{distance_value} {self.Translations.Distance.ft}'
+        logger.info(f'Translated {distance_value} to {return_string}')
 
 
     def populate_parsed_strings(self) -> None:
@@ -108,13 +117,13 @@ class TemplateHandler:
 
     def append_tag_to_element(self, element_name: str, new_tag: Tag) -> None:
         if element_name == self.CONSTANT_BOX_NAMES.description:
-            print("Can't add element to description box, as it is a <p> tag. Please use 'set_element_text' instead")
+            logger.error("Can't add element to description box, as it is a <p> tag. Please use 'set_element_text' instead")
             raise Exception()
         element = self.parsed_strings[element_name]
         if element:
             element.append(new_tag)
         else:
-            print(f'Element with name {element_name} is not found in template, skipping')
+            logger.warning(f'Element with name {element_name} is not found in template, skipping')
 
     def append_picture(self, element_name: str,  relative_path: str) -> None:
         new_picture_element = self.soup.new_tag('img')
@@ -127,9 +136,7 @@ class TemplateHandler:
             markup = element.string = new_text.replace('\n', '<br>')
             element.string.replace_with(BeautifulSoup(markup, "html.parser"))
         else:
-            print(f'Element with name {element_name} is not found in template, skipping')
-
-        pass
+            logging.warning(f'Element with name {element_name} is not found in template, skipping')
 
     def get_level_tag(self, level: int, add_as_picture: bool = False) -> Tag:
         if add_as_picture:
@@ -139,7 +146,6 @@ class TemplateHandler:
         else:
             level_tag: Tag = self.soup.new_tag("p")
             level_tag.string = self.Translations.SPELL_LEVELS[level]
-
         return level_tag
 
     def decorate_material_component(self, material_component: str) -> str:
@@ -152,8 +158,7 @@ class TemplateHandler:
     def find_elements_by_box(self, box_value: str) -> Tag | None:
         found_boxes: list[Tag] = self.soup.find_all(box= box_value)
         if len(found_boxes) > 1:
-            print(f"More than 1 box of same type found in {self.template}!")
-            print(found_boxes)
+            logging.error(f"More than 1 box of same type found in {self.template}!\n {found_boxes}")
             exit(1)
         if found_boxes:
             return found_boxes[0]
