@@ -62,15 +62,19 @@ class SpellDatabase:
             spell_level: int = spell.get_level()
             add_to_map(self.level_to_spells, spell_level, spell_name)
 
-    def __get_single_spell_by_name(self, names_to_spells: dict[str, Spell], spell_name: str) -> Spell | None:
+    def __get_single_spell_by_name(self, names_to_spells: dict[str, Spell], spell_name: str, presise: bool) -> Spell | None:
         for name, spell in names_to_spells.items():
-            is_same_spell: bool = spell_name.casefold() in name.casefold()
+            if presise:
+                is_same_spell: bool = spell_name.casefold() == name.casefold()
+            else:
+                is_same_spell: bool = spell_name.casefold() in name.casefold()
             if is_same_spell:
                 return spell
         return None
 
     def get_spells_by_names(self, /, *spell_names: str,
-                            parse_english_names: bool = True
+                            parse_english_names: bool = True,
+                            presise: bool = False,
                             ) -> list[Spell]:
         if parse_english_names:
             names_to_spells = self.name_to_spell
@@ -79,7 +83,7 @@ class SpellDatabase:
             names_to_spells = self.translated_name_to_spell
         return_list: list[Spell] = []
         for spell_name in spell_names:
-            found_spell = self.__get_single_spell_by_name(names_to_spells, spell_name)
+            found_spell = self.__get_single_spell_by_name(names_to_spells, spell_name, presise)
             if found_spell:
                 return_list.append(found_spell)
         return return_list
