@@ -1,3 +1,4 @@
+from typing import Annotated, Literal
 from html2image.html2image import os
 from PIL import Image
 from icecream import ic
@@ -116,6 +117,7 @@ class SpellDatabase:
     @staticmethod
     def render_spells_to_folder(folder: str, /, *spells: Spell,
                                 classes_to_specify: list[str] | None = None,
+                                size: tuple[int, int] | None = None,
                                 restrict_to: int | None = None,
                                 custom_css: str | None = None
                                 ) -> None:
@@ -191,46 +193,113 @@ class SpellDatabase:
             # th.append_tag_to_element(th.CONSTANT_BOX_NAMES.description , description_element)
 
             file_name: str = folder + '/' + spell.get_file_name() + '.png'
-            th.render(file_path=file_name, custom_css=custom_css)
+            th.render(file_path=file_name, custom_css=custom_css,size=size)
 
         
     @staticmethod
-    def combine_images_to_printable(input_directory: str, output_directory: str) -> None:
+    def combine_images_to_printable(input_directory: str, output_directory: str,
+                                    /,
+                                    resolution: Literal[150, 300],
+                                    paper_format: Literal['A4'] = 'A4',
+                                    margins_pix: tuple[int, int, int, int] | None = None,
+                                    margins_inch: tuple[float, float, float, float] | None = None,
+                                    gap: tuple[int, int] | None = None,
+                                    
+                                    ) -> None:
+        """
+DPI:            DPI of sheet to print on
+paper_format:   choose between 'A4' formats
+margin_*:       space to cut from rendered sheet. Specify according to printer settings to avoid wrong scaling of picture during printing
+    margins_pix:    tuple of margin in pixels: (top, right, left, bottom)
+    margins_inch:   tuple of margin in inches: (top, right, left, bottom)
+gap:            (horisontal, vertical) gaps between images in pixels
+
+
+
+        """
+
+        # CONSTANTS
+        SIZE_STANDARTS: dict[str, dict[int, dict[str, int | tuple[int,int]]]] = {
+                'A4': {
+                    150: {
+                        'size': (1240, 1754),
+                        'inch_in_pixels': 48
+                        },
+                    300: {
+                        'size': (2480, 3508),
+                        'inch_in_pixels': 96
+                        }
+                    }
+
+                }
+
+        # PREPARATION
+        paper_format_values = SIZE_STANDARTS[paper_format][resolution]
+        final_margins: tuple[int, int, int, int]
+        if not margins_pix:
+            final_margins = (0,0,0,0)
+            if margins_inch:
+                temp_margins_pix: list[int] = []
+                for i, inch in enumerate(margins_inch):
+                    inch_in_pixel = paper_format_values['inch_in_pixels']
+                    if not isinstance(inch_in_pixel, tuple):
+                        raise ValueError
+                    temp_margins_pix.append(int(inch * inch_in_pixel[i]))
+                final_margins = (temp_margins_pix[0], temp_margins_pix[1], temp_margins_pix[2], temp_margins_pix[3])
+        else:
+            final_margins = margins_pix
+
+        resolution_tuple = paper_format_values['size']
+        if not isinstance(resolution_tuple, tuple):
+            raise ValueError
+
+        if gap:
+            gap_h = gap[0]
+            gap_v = gap[1]
+        else:
+            gap_h = gap_v = 0
+
+        sheet_size = (resolution_tuple[0]-final_margins[0]-final_margins[3], resolution_tuple[1]-final_margins[1]-final_margins[2])
+
+
+        # Main Logic
+
         images: list[str] = os.listdir(input_directory)
         for image_filename in images.copy():
             if image_filename[-3:] != 'png':
                 print(f'{image_filename} is not a png, skpping')
                 images.remove(image_filename)
 
-        A4_SIZE_300_DPI = (2480, 3508)
-        A4_SIZE_150_DPI = (1240, 1754)
-        images_on_sheet: int = 4
 
-        range_value = int(len(images)/images_on_sheet)
-        if len(images)%images_on_sheet:
-            range_value += 1
-        for sheet_id in range(0, range_value):
-            image_group = images[:images_on_sheet]
-            sheet = Image.new('RGB', A4_SIZE_150_DPI, color='white')
+        all_pictures_printed: bool = False
+
+        sheet_id: int = -1
+
+        while not all_pictures_printed:
+            sheet_id += 1
+            space_left_on_sheet: bool = True
+            sheet = Image.new('RGB', sheet_size, color='white')
             last_height = 0
             last_width = 0
-            in_row = 2
-            for i ,image_filename in enumerate(image_group):
-                image_filename = input_directory + '/' + image_filename
+            while space_left_on_sheet:
+                if not images:
+                    all_pictures_printed = True
+                    break
+                image_filename = input_directory + '/' + images[0]
                 image: Image.Image = Image.open(image_filename)
-                sheet.paste(image, (last_width, last_height))
-                if i%in_row and i != 0:
-                    last_height += image.height
+                if image.width + last_width + gap_h > sheet_size[0]:
+                    last_height += image.height + gap_v
                     last_width = 0
-                else:
-                    last_width += image.width
+                    continue
+                if image.height + last_height + gap_v > sheet_size[1]:
+                    space_left_on_sheet = False
+                    break
+                sheet.paste(image, (last_width, last_height))
+                last_width += image.width + gap_h
+                images = images[1:]
             sheet.save(f'{output_directory}/outp{sheet_id}.png')
-            images = images[images_on_sheet:]
             
 
-
-
-        pass
 
 
 

@@ -58,7 +58,9 @@ class TemplateHandler:
         self.populate_parsed_strings()
 
 
-    def render(self, size: tuple[int, int] = DEFAULT_SIZE, file_path: str = DEFAULT_OUTP_NAME, custom_css: str | None = None) -> None:
+    def render(self, size: tuple[int, int] | None, file_path: str = DEFAULT_OUTP_NAME, custom_css: str | None = None) -> None:
+        if not size:
+            size = DEFAULT_SIZE
         self.screenshot_options['size'] = size
         self.screenshot_options['save_as'] = file_path
         self.clean_build()
