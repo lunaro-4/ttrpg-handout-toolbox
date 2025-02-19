@@ -181,6 +181,14 @@ class BasicTemplateColorschemes:
     }
 
     """
+    warrior_colorscheme: str = """
+    :root {
+    --primary-color:#923626;
+    --secondary-color:#F3F0F8;
+    --accent-color:#E1DDE4;
+    --text-color:#000000;
+    }
+    """
 
 
 
