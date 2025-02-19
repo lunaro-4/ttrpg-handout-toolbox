@@ -5,7 +5,7 @@ from typing import Any
 from html2image.html2image import os
 import requests
 from abc import ABC, abstractmethod
-from TTRPG_CTB.spell_handler import Spell
+from TTRPG_CTB import Spell
 import ast
 from bs4 import BeautifulSoup
 from global_constants import CLASS_SUBCLASS_MAP

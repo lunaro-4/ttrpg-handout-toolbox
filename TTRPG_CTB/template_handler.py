@@ -3,7 +3,6 @@ from bs4 import BeautifulSoup, Tag
 from html2image import Html2Image
 import shutil
 import os
-# from global_constants import self.Translations
 from .translations import Translations
 import logging
 
@@ -109,6 +108,7 @@ class TemplateHandler:
             case _:
                 return_string =  f'{distance_value} {self.Translations.Distance.ft}'
         logger.info(f'Translated {distance_value} to {return_string}')
+        return return_string
 
 
     def populate_parsed_strings(self) -> None:
@@ -148,6 +148,7 @@ class TemplateHandler:
             level_tag.string = self.Translations.SPELL_LEVELS[level]
         return level_tag
 
+    # TODO: remove and reorganize
     def decorate_material_component(self, material_component: str) -> str:
         string_to_return: str = self.Translations.Components.material_component_text
         string_to_return = f'<em><b>{string_to_return}</b>{material_component}</em>\n\n'
