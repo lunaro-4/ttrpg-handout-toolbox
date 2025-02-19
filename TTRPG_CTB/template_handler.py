@@ -56,14 +56,15 @@ class TemplateHandler:
         self.populate_parsed_strings()
 
 
-    def render(self, size: tuple[int, int], file_path: str, custom_css: str | None = None) -> None:
+    def render(self, size: tuple[int, int], file_path: str, /, custom_css: str | None = None, clean_after_rendering: bool = True) -> None:
         self.screenshot_options['size'] = size
         self.screenshot_options['save_as'] = file_path
         self.clean_build()
         self.generate_symlinks(self.template)
         self.render_html(custom_css)
         self.render_image()
-        self.clean_build()
+        if clean_after_rendering:
+            self.clean_build()
 
     def get_soup(self):
         with open(f'{self.template}/index.html') as html_file:
