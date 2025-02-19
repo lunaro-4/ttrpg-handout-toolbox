@@ -1,3 +1,5 @@
+from TTRPG_CTB.translations import Translations, Translations_1
+from typing import ClassVar
 
 class CLASS_SUBCLASS_MAP:  
     druid_class_name: str = 'druid'
@@ -116,13 +118,94 @@ class CLASS_SUBCLASS_MAP:
 
         return outp
 
+class RussianTranslations_1(Translations_1):
+    class Actions(Translations_1.Actions):
+        @property
+        def bonus_action(self) -> str:
+            """The bonus_action property."""
+            return "Бонусное действие"
+        # bonus_action: str = "Бонусное действие"
+        @property
+        def action(self) -> str:
+            return "Действие"
+        @property
+        def other(self) -> str:
+            return "Особое"
 
-class RussianTranslations:
-    class Actions:
+    class Time(Translations_1.Time):
+        @property
+        def hour(self) -> str:
+            return "часов"
+        @property
+        def minute(self) -> str:
+            return "минут"
+        @property
+        def second(self) -> str:
+            return "секунд"
+        @property
+        def day(self) -> str:
+            return "дней"
+        @property
+        def week(self) -> str:
+            return "недель"
+        @property
+        def month(self) -> str:
+            return "месяцев"
+        @property
+        def other(self) -> str:
+            return "Особое"
+
+    class Distance(Translations_1.Distance):
+        @property
+        def on_self(self) -> str:
+            return "На себя"
+        @property
+        def on_touch(self) -> str:
+            return "Касание"
+        @property
+        def ft(self) -> str:
+            return "футов"
+        @property
+        def other(self) -> str:
+            return "Особое"
+
+    class Components(Translations_1.Components):
+        @property
+        def verbal(self) -> str:
+            return "В"
+        @property
+        def somatic(self) -> str:
+            return "С"
+        @property
+        def material(self) -> str:
+            return "М"
+        @property
+        def material_component_text(self) -> str:
+            return "Материальный компонент: "
+    @property
+    def SPELL_LEVELS(self) -> dict[int, str]:
+        return {
+            0: "Заговор",
+            1: "Уровень I",
+            2: "Уровень II",
+            3: "Уровень III",
+            4: "Уровень IV",
+            5: "Уровень V",
+            6: "Уровень VI",
+            7: "Уровень VII",
+            8: "Уровень IIX",
+            9: "Уровень IX",
+            }
+
+
+
+class RussianTranslations(Translations):
+    class Actions(Translations.Actions):
         bonus_action: str = "Бонусное действие"
         action: str = "Действие"
         other: str = "Особое"
-    class Time:
+
+    class Time(Translations.Time):
         hour: str = "часов"
         minute: str = "минут"
         second: str = "секунд"
@@ -130,16 +213,14 @@ class RussianTranslations:
         week: str = "недель"
         month: str = "месяцев"
         other: str = "Особое"
-    class Distance:
+
+    class Distance(Translations.Distance):
         on_self: str = "На себя"
         on_touch: str = "Касание"
-        ft:str = "футов"
+        ft: str = "футов"
         other: str = "Особое"
 
-    # class SpellLevels:
-    #     cantrip: str = "Заговор"
-    #     leveled_spell_level: str = "Уровень"
-    class Components:
+    class Components(Translations.Components):
         verbal: str = "В"
         somatic: str = "С"
         material: str = "М"

@@ -12,7 +12,7 @@ class Spell:
         REACTION = 0
 
     def __init__(self, **kwargs) -> None:
-        self.__name_ru: str | None = kwargs.get('name_ru')
+        self.__name_translated: str | None = kwargs.get('name_ru')
         self.__name: str = kwargs['name']
         self.__components: dict[str, bool] = kwargs['components']
         self.__material_component: str | None = kwargs.get('material_component')
@@ -31,6 +31,9 @@ class Spell:
 
     @classmethod
     def load_from_json(cls, spell_path: str ) -> typing.Self:
+        """
+        example of valid json is provied with static metod 'get_valid_json_example()'
+        """
         loaded_data: dict = {}
         if not spell_path[-4:] == "json":
             print(f'{spell_path} is not a json')
@@ -56,6 +59,44 @@ class Spell:
     def __hash__(self) -> int:
         return hash(self.get_name())
 
+    @staticmethod
+    def get_valid_json_example() -> str:
+        json_example: str = """
+{
+    "name_translated": "Сигнал тревоги",
+    "name": "Alarm",
+    "components": {
+        "verbal": true,
+        "somatic": true,
+        "material": true
+    },
+    "material_component": "колокольчик и серебряная проволочка",
+    "casting_time": 60,
+    "description": "Вы устанавливаете сигнализацию на случай вторжения. Выберите дверь, окно или область в пределах дистанции не больше куба с длиной ребра 20 футов. До окончания действия заклинания тревога уведомляет вас каждый раз, когда охраняемой области касается или входит в неё существо с размером не меньше Крошечного. При накладывании заклинания вы можете указать существ, которые не будут вызывать срабатывание тревоги. Вы также выбираете, мысленной будет тревога или слышимой.
+Мысленная тревога предупреждает вас звоном в сознании, если вы находитесь в пределах 1 мили от охраняемой области. Этот звон пробуждает вас, если вы спите.
+Слышимая тревога издает звон колокольчика в течение 10 секунд в пределах 60 футов.
+",
+    "distance": 30,
+    "duration": 28800,
+    "level": 1,
+    "is_ritual": true,
+    "requires_concentration": false,
+    "classes": [
+        "wizard",
+        "artificer",
+        "ranger"
+    ],
+    "classes_tce": [],
+    "archetypes": [
+        "oath_of_the_watchers",
+        "clockwork_soul"
+    ]
+}
+
+
+        """
+        return json_example
+
     def save_to_json(self, save_path: str) -> None:
         with open(f'{save_path}', "w") as file:
             file.write(json.dumps(self.__json, indent=4).encode().decode("unicode-escape"))
@@ -65,9 +106,9 @@ class Spell:
     def get_name(self) -> str:
         return self.__name
 
-    def get_name_ru(self) -> str:
-        if self.__name_ru:
-            return self.__name_ru
+    def get_name_translated(self) -> str:
+        if self.__name_translated:
+            return self.__name_translated
         return self.__name
 
     def get_components(self) -> dict[str, bool]:

@@ -1,15 +1,14 @@
-from typing import Any
+from typing import Any, Callable, Type
 from bs4 import BeautifulSoup, Tag
 from html2image import Html2Image
 import shutil
 import os
-from global_constants import RussianTranslations
+# from global_constants import self.Translations
+from .translations import Translations
 
 
-DEFAULT_TEMPLATE = "basic-template"
-OUTP_HTML = "build/outp.html"
-DEFAULT_OUTP_NAME = "build/outp.png"
-DEFAULT_SIZE = (408, 700)
+
+
 
 class TemplateHandler:
     screenshot_options: dict = {
@@ -48,19 +47,16 @@ class TemplateHandler:
             return list(self.__raw_dict.keys())
 
 
-    def __init__(self, template_name: str | None = None) -> None:
-        if not template_name:
-            template_name = DEFAULT_TEMPLATE
+    def __init__(self, template_name: str, Translations: Type[Translations] ) -> None:
         self.soup: BeautifulSoup
         self.parsed_strings: TemplateHandler.ParsedStrings =  self.ParsedStrings()
+        self.Translations = Translations
         self.template: str = template_name
         self.get_soup()
         self.populate_parsed_strings()
 
 
-    def render(self, size: tuple[int, int] | None, file_path: str = DEFAULT_OUTP_NAME, custom_css: str | None = None) -> None:
-        if not size:
-            size = DEFAULT_SIZE
+    def render(self, size: tuple[int, int], file_path: str, custom_css: str | None = None) -> None:
         self.screenshot_options['size'] = size
         self.screenshot_options['save_as'] = file_path
         self.clean_build()
@@ -70,7 +66,7 @@ class TemplateHandler:
         self.clean_build()
 
     def get_soup(self):
-        with open(f'templates/{self.template}/index.html') as html_file:
+        with open(f'{self.template}/index.html') as html_file:
             content = html_file.read()
             self.soup = BeautifulSoup(content, features="html.parser")
 
@@ -78,31 +74,31 @@ class TemplateHandler:
     def translate_duration(self, duration_value: int, is_action: bool = False) -> str:
         if is_action:
             if duration_value == 2:
-                return RussianTranslations.Actions.bonus_action
+                return self.Translations.Actions.bonus_action
             if duration_value == 4:
-                return RussianTranslations.Actions.action
+                return self.Translations.Actions.action
             if duration_value == 6:
-                return RussianTranslations.Actions.action + 'и' + RussianTranslations.Actions.bonus_action
+                return self.Translations.Actions.action + 'и' + self.Translations.Actions.bonus_action
         if duration_value%(3600*7*24) == 0:
-            return f'{int(duration_value/(3600*7*24))} {RussianTranslations.Time.week}'
+            return f'{int(duration_value/(3600*7*24))} {self.Translations.Time.week}'
         if duration_value%(3600*24) == 0:
-            return f'{int(duration_value/(3600*24))} {RussianTranslations.Time.day}'
+            return f'{int(duration_value/(3600*24))} {self.Translations.Time.day}'
         if duration_value%(3600) == 0:
-            return f'{int(duration_value/(3600))} {RussianTranslations.Time.hour}'
+            return f'{int(duration_value/(3600))} {self.Translations.Time.hour}'
         if duration_value%(60) == 0:
-            return f'{int(duration_value/(60))} {RussianTranslations.Time.minute}'
+            return f'{int(duration_value/(60))} {self.Translations.Time.minute}'
         if duration_value != -1:
-            return f'{int(duration_value)} {RussianTranslations.Time.second}'
-        return RussianTranslations.Time.other
+            return f'{int(duration_value)} {self.Translations.Time.second}'
+        return self.Translations.Time.other
 
     def translate_distance(self, distance_value: int) -> str:
         match distance_value:
             case 0:
-                return RussianTranslations.Distance.on_self
+                return self.Translations.Distance.on_self
             case 5:
-                return RussianTranslations.Distance.on_touch
+                return self.Translations.Distance.on_touch
             case _:
-                return f'{distance_value} {RussianTranslations.Distance.ft}'
+                return f'{distance_value} {self.Translations.Distance.ft}'
 
 
     def populate_parsed_strings(self) -> None:
@@ -141,12 +137,12 @@ class TemplateHandler:
             level_tag['src'] = level_picture_string
         else:
             level_tag: Tag = self.soup.new_tag("p")
-            level_tag.string = RussianTranslations.SPELL_LEVELS[level]
+            level_tag.string = self.Translations.SPELL_LEVELS[level]
 
         return level_tag
 
     def decorate_material_component(self, material_component: str) -> str:
-        string_to_return: str = RussianTranslations.Components.material_component_text
+        string_to_return: str = self.Translations.Components.material_component_text
         string_to_return = f'<em><b>{string_to_return}</b>{material_component}</em>\n\n'
         return string_to_return
 
@@ -184,29 +180,18 @@ class TemplateHandler:
 
 
     def generate_symlinks(self, template_name: str) -> None:
-        files: list[str] = os.listdir('templates/'+template_name)
+        files: list[str] = os.listdir(template_name)
         for file in files:
-            os.symlink(f"../templates/{template_name}/{file}", f'build/{file}', os.path.isdir(f'templates/{template_name}/{file}'))
+            os.symlink(f"../{template_name}/{file}", f'build/{file}', os.path.isdir(f'{template_name}/{file}'))
                        
 
     def render_image(self):
-        def recursive_find_files(directory_path: str) -> list[str] :
-            file_list: list[str] = []
-            files = os.listdir(directory_path)
-            for file in files:
-                realfile = directory_path + '/'+  file
-                if os.path.isdir(realfile):
-                    file_list.extend(recursive_find_files(realfile))
-                else:
-                    file_list.append(realfile)
-
-            return file_list
 
         file_path: str = self.screenshot_options['save_as']
         file_name_index: int = file_path[::-1].find('/')
         file_name = file_path[-file_name_index:]
         self.screenshot_options['save_as'] = file_name
-        hti = Html2Image(temp_path='build', custom_flags=['--disable-logging', '--log-level 3'], disable_logging=True) # , '--headless=new'
+        hti = Html2Image(temp_path='build', custom_flags=['--disable-logging', '--log-level 3'], disable_logging=True, keep_temp_files=True) # , '--headless=new'
         hti.screenshot(**self.screenshot_options)
         shutil.move(file_name, file_path)
 

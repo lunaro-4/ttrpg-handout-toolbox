@@ -1,4 +1,3 @@
-import json
 import re
 import sys
 from icecream import ic
@@ -6,7 +5,7 @@ from typing import Any
 from html2image.html2image import os
 import requests
 from abc import ABC, abstractmethod
-from spell_handler import Spell
+from TTRPG_CTB.spell_handler import Spell
 import ast
 from bs4 import BeautifulSoup
 from global_constants import CLASS_SUBCLASS_MAP
@@ -199,20 +198,16 @@ class DndSuParser(ParsingBoss):
     def __parse_duaration_multiplyer(self, raw_duration: str) -> int:
         st = DndSuParser.StaticTranslations()
         if raw_duration.find(st.HOURS) != -1:
-            duration_value_name = 'h'
             return 3600
         elif raw_duration.find(st.MINUTES) != -1:
-            duration_value_name = "m"
             return 60
         elif raw_duration.find(st.SECONDS) != -1:
-            duration_value_name = "s"
+            return 1
         elif raw_duration.find(st.INSTANT) != -1:
             return 0
         elif raw_duration.find(st.DAYS_1) + raw_duration.find(st.DAYS_2) + raw_duration.find(st.DAYS_3) != -3:
-            duration_value_name = 'd'
             return 3600*24
         elif raw_duration.find(st.WEEK) != -1:
-            duration_value_name = 'w'
             return 3600 * 24 * 7
         return -1
 
@@ -457,7 +452,7 @@ class DndSuParser(ParsingBoss):
         # is_ritual = bool(int(spell_info['filter_ritual'][0])-1)
         
         new_spell_dict: dict = {
-                "name_ru": spell_name,
+                "name_translated": spell_name,
                 "name": spell_info['title_en'],
                 "components": components_to_bool,
                 "material_component": prs['material_component'],
