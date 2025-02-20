@@ -1,7 +1,5 @@
 from abc import ABC, abstractmethod
 
-from better_abc import abstract_attribute
-
 class Translations_1(ABC):
     class Actions(ABC):
         @property

@@ -1,11 +1,9 @@
 from TTRPG_CTB.translations import Translations
-from TTRPG_CTB import spell_handler, spell_database_handler, template_handler
+from TTRPG_CTB import Spell, template_handler
 from typing import Literal, Type
 from PIL import Image
 import os
 
-Spell = spell_handler.Spell
-SpellDatabase = spell_database_handler.SpellDatabase
 TemplateHandler = template_handler.TemplateHandler
 
 def render_spells_to_folder(folder: str,
@@ -93,7 +91,7 @@ def render_spells_to_folder(folder: str,
         # th.append_tag_to_element(th.CONSTANT_BOX_NAMES.description , description_element)
 
         file_name: str = folder + '/' + spell.get_file_name() + '.png'
-        th.render(file_path=file_name, custom_css=custom_css,size=size)
+        th.render(size, file_name, custom_css=custom_css)
 
 
 def combine_images_to_printable(input_directory: str, output_directory: str,

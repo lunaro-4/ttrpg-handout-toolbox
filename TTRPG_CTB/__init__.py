@@ -1,5 +1,5 @@
-from typing import Literal, Self
-from html2image.html2image import os
+from typing import Literal, Self, TypedDict, Unpack
+import os
 import json
 import logging
 
@@ -7,6 +7,22 @@ logging.basicConfig(level=logging.ERROR)
 logger = logging.getLogger("TTRPG_CTB_logger")
 
 
+class SpellInput(TypedDict):
+    name_ru: str | None
+    name: str
+    components: dict[str, bool]
+    material_component: str | None
+
+    casting_time: int
+    description: str
+    distance: int
+    duration: int
+    level: int
+    is_ritual: bool
+    requires_concentration: bool
+    classes: list[str]
+    classes_tce: list[str]
+    archetypes: list[str]
 
 
 
@@ -17,7 +33,7 @@ class Spell:
         BONUS_ACTION = 2
         REACTION = 0
 
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, **kwargs: Unpack[SpellInput]) -> None:
         self.__name_translated: str | None = kwargs.get('name_ru')
         self.__name: str = kwargs['name']
         self.__components: dict[str, bool] = kwargs['components']
@@ -33,7 +49,7 @@ class Spell:
         self.__classes_tce: list[str] = kwargs['classes_tce']
         self.__archetypes: list[str] = kwargs['archetypes']
 
-        self.__json: dict = kwargs
+        self.__json: dict = dict(kwargs)
 
     @classmethod
     def load_from_json(cls, spell_path: str ) -> Self:
@@ -59,7 +75,9 @@ class Spell:
     def __repr__(self) -> str :
         return json.dumps(self.__json, indent=2).replace('\\/', '/').encode().decode("unicode-escape")
     
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Spell):
+            return NotImplemented
         return self.get_name() == other.get_name()
     
     def __hash__(self) -> int:
@@ -216,10 +234,11 @@ class SpellDatabase:
 
     def __get_single_spell_by_name(self, names_to_spells: dict[str, Spell], spell_name: str, presise: bool) -> Spell | None:
         for name, spell in names_to_spells.items():
+            is_same_spell: bool
             if presise:
-                is_same_spell: bool = spell_name.casefold() == name.casefold()
+                is_same_spell = spell_name.casefold() == name.casefold()
             else:
-                is_same_spell: bool = spell_name.casefold() in name.casefold()
+                is_same_spell = spell_name.casefold() in name.casefold()
             if is_same_spell:
                 return spell
         return None
@@ -242,7 +261,7 @@ class SpellDatabase:
     
 
 
-    def populate_classes_maps(self):
+    def populate_classes_maps(self) -> None:
 
         def add_to_map(map: dict[str, list[Spell]], key: str, value: str | None) -> None:
             if key not in map.keys():

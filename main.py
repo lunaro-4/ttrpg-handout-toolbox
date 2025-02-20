@@ -1,6 +1,5 @@
 # from template_handler import TemplateHandler
 # from spell_data_handler import Spell
-from global_constants import BasicTemplateColorschemes
 
 def main():
     """ Usage examples:

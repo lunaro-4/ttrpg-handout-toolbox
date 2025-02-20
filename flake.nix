@@ -1,5 +1,5 @@
 {
-  description = "A very basic flake";
+  description = "A flake to work on python project";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-24.11";
@@ -18,14 +18,28 @@
 	{
 		devShells.${system}.default = pkgs.mkShell {
 			
+			packages = [(pkgs.python3.withPackages(pypkgs: with pypkgs;[
+
+			html2image
+			beautifulsoup4
+			pillow
+			icecream
+			requests
+			types-beautifulsoup4
+			types-requests
+			]))
+
+			];
+		
 		
 			buildInputs = with pkgs; [
-				python3
 				pyright
 				# wkhtmltopdf
 				# libstdcxx5
 				chromium
 				vscode-langservers-extracted
+				mypy
+				ruff
 
 
 			];
@@ -38,10 +52,10 @@
 # 			];
 			# LIBRARY_PATH= "/usr/lib:/usr/lib64/:$LIBRARY_PATH";
 			# LD_LIBRARY_PATH= "${pkgs.gcc.cc.lib}/lib:$LD_LIBRARY_PATH";
-			shellHook = ''
-			source .venv/bin/activate
-			#zsh
-			'';
+			# shellHook = ''
+			# # source .venv/bin/activate
+			# #zsh
+			# '';
   };
 };
 }

@@ -1,8 +1,7 @@
 import re
 import sys
-from icecream import ic
 from typing import Any
-from html2image.html2image import os
+import os
 import requests
 from abc import ABC, abstractmethod
 from TTRPG_CTB import Spell
@@ -49,6 +48,7 @@ class ParsingBoss(ABC):
         else:
             for spell in self.spells:
                 spell.save_to_json(directory+"/"+spell.get_file_name()+ '.json')
+            return None
 
     def render_spell(self,spell_info: dict) -> Spell:
         """ Place to do convertions, in case 'Spell' vaules will change """
@@ -230,7 +230,7 @@ class DndSuParser(ParsingBoss):
         spells_raw_refined = spells_raw[spells_raw.find('{'):-1]
         spells_dict = ast.literal_eval(spells_raw_refined)
         print(f'Found {len(spells_dict)} spells ')
-        return spells_dict['cards']
+        return list(spells_dict['cards'])
 
 
         
@@ -248,7 +248,7 @@ class DndSuParser(ParsingBoss):
         self.spells_raw = self.__get_spell_list_from_html(spells_html)
 
     def __get_spell_name(self, spell: dict) -> str:
-        return spell['title'].replace('/', '_')
+        return str(spell['title']).replace('/', '_')
 
     def __get_spell_file_name(self, spell_name: str, save_directory: str) -> str:
         return save_directory+'/'+spell_name +'.html'
@@ -290,7 +290,7 @@ class DndSuParser(ParsingBoss):
         names_to_soups: dict[str, BeautifulSoup] = {}
         for spell, file in self.names_to_files.items():
             print(f'Getting soup for {spell}')
-            names_to_soups[spell] = self._ParsingBoss__get_soup_from_file(file)
+            names_to_soups[spell] = self._ParsingBoss__get_soup_from_file(file) # type: ignore[attr-defined]
         self.names_to_soups = names_to_soups
 
 
@@ -321,7 +321,7 @@ class DndSuParser(ParsingBoss):
                     if i == 0 and child.text == "Компоненты:":
                         continue
                     elif i == 1:
-                        return child.text[child.text.find('(')+1:child.text.find(')')].strip()
+                        return str(child.text)[child.text.find('(')+1:child.text.find(')')].strip()
                     break
         return ""
 
@@ -471,7 +471,7 @@ class DndSuParser(ParsingBoss):
 
 
         
-    def translate_spells(self):
+    def translate_spells(self) -> None:
         for spell in self.spells_raw:
             self.spells.append(self.__refactor_parsed(spell))
 
@@ -482,29 +482,4 @@ class DndSuParser(ParsingBoss):
         pass
 
 
-def get_archetype(spells:list) -> None:
-    delimiter = '\n====================\n'
-    print_string: str = ''
-    for spell in spells:
-        archetype: list | None = spell.get('filter_archetype')
-        is_uncatalogued: bool = False
-        if archetype and str(archetype) != '[]':
-            for key in archetype:
-                if key not in DndSuParser.CLASS_ARCHETYPE_CODE_TRANSLATION.keys():
-                    if not is_uncatalogued:
-                        print_string += spell.get('title')
-                        is_uncatalogued = True
-                    print_string += '\t' + str(key)
-        if is_uncatalogued:
-            print_string += delimiter
-    print(print_string)
 
-def print_spells(spells: list) -> None:
-    delimiter = '\n====================\n'
-    print_string: str = ''
-    for spell in spells:
-        ic(spell)
-        # ic(spell.get('title'))
-        # ic(spell.get('filter_class'))
-        # ic(spell.get('filter_class_tce'))
-    print(print_string)

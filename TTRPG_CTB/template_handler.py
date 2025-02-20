@@ -1,6 +1,6 @@
-from typing import Any, Callable, Type
+from typing import Type
 from bs4 import BeautifulSoup, Tag
-from html2image import Html2Image
+from html2image import Html2Image #  type: ignore[import-untyped]
 import shutil
 import os
 from .translations import Translations
@@ -37,7 +37,10 @@ class TemplateHandler:
                     cbn.spell_name: None
                     }
         def __getitem__(self, name: str, /) -> Tag | None:
-            return self.__raw_dict[name]
+            value: Tag | None = self.__raw_dict[name]
+            if value:
+                return value
+            return None
 
         def __setitem__(self, name: str, value: Tag | None, /) -> None:
             if name not in self.__raw_dict.keys():
@@ -68,7 +71,7 @@ class TemplateHandler:
         if clean_after_rendering:
             self.clean_build()
 
-    def get_soup(self):
+    def get_soup(self) -> None:
         logger.info('getting soup')
         with open(f'{self.template}/index.html') as html_file:
             content = html_file.read()
@@ -134,17 +137,18 @@ class TemplateHandler:
         element: Tag | None = self.parsed_strings[element_name]
         if element:
             markup = element.string = new_text.replace('\n', '<br>')
-            element.string.replace_with(BeautifulSoup(markup, "html.parser"))
+            element.replace_with(BeautifulSoup(markup, "html.parser"))
         else:
             logging.warning(f'Element with name {element_name} is not found in template, skipping')
 
     def get_level_tag(self, level: int, add_as_picture: bool = False) -> Tag:
+        level_tag: Tag
         if add_as_picture:
-            level_tag: Tag = self.soup.new_tag("img")
+            level_tag = self.soup.new_tag("img")
             level_picture_string = f'src/lvl_{level}_spell.png'
             level_tag['src'] = level_picture_string
         else:
-            level_tag: Tag = self.soup.new_tag("p")
+            level_tag = self.soup.new_tag("p")
             level_tag.string = self.Translations.SPELL_LEVELS[level]
         return level_tag
 
@@ -165,7 +169,7 @@ class TemplateHandler:
             return found_boxes[0]
         return None
 
-    def clean_build(self):
+    def clean_build(self) -> None:
         build_dir: str = 'build'
         files: list[str] = os.listdir(build_dir)
         for file in files:
@@ -174,7 +178,7 @@ class TemplateHandler:
         if not os.path.exists(f'{build_dir}/html_outp'):
             os.mkdir(f'{build_dir}/html_outp')
 
-    def render_html(self, custom_css: str | None = None):
+    def render_html(self, custom_css: str | None = None) -> None:
         if custom_css:
             style = self.soup.new_tag("style")
             style.string = custom_css
@@ -192,7 +196,7 @@ class TemplateHandler:
             os.symlink(f"../{template_name}/{file}", f'build/{file}', os.path.isdir(f'{template_name}/{file}'))
                        
 
-    def render_image(self):
+    def render_image(self) -> None:
 
         file_path: str = self.screenshot_options['save_as']
         file_name_index: int = file_path[::-1].find('/')
