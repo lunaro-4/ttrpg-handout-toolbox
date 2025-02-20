@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import TypedDict
 
 class Translations_1(ABC):
     class Actions(ABC):
@@ -175,3 +176,51 @@ class Translations(type):
             8: "",
             9: "",
             }
+
+
+class __Actions(TypedDict):
+    action: str
+    bonus_action: str
+    other: str
+class __Distance(TypedDict):
+    on_self: str 
+    on_touch: str 
+    ft:str
+    other: str
+class __Time(TypedDict):
+    hour: str
+    minute: str
+    second: str
+    day: str
+    week: str
+    month: str 
+    other: str 
+class __Components(TypedDict):
+    verbal: str
+    somatic: str
+    material: str
+    material_component_text: str
+
+class __SpellLevels(TypedDict):
+    _0:str 
+    _1:str 
+    _2:str 
+    _3:str 
+    _4:str 
+    _5:str 
+    _6:str 
+    _7:str 
+    _8:str 
+    _9:str 
+
+
+class Translations_2(TypedDict):
+    actions: __Actions
+    distance: __Distance
+    time: __Time
+    components: __Components
+    spell_levels: __SpellLevels
+    
+
+
+
