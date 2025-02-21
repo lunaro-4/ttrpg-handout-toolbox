@@ -178,16 +178,16 @@ class Translations(type):
             }
 
 
-class __Actions(TypedDict):
+class _Actions(TypedDict):
     action: str
     bonus_action: str
     other: str
-class __Distance(TypedDict):
+class _Distance(TypedDict):
     on_self: str 
     on_touch: str 
     ft:str
     other: str
-class __Time(TypedDict):
+class _Time(TypedDict):
     hour: str
     minute: str
     second: str
@@ -195,13 +195,13 @@ class __Time(TypedDict):
     week: str
     month: str 
     other: str 
-class __Components(TypedDict):
+class _Components(TypedDict):
     verbal: str
     somatic: str
     material: str
     material_component_text: str
 
-class __SpellLevels(TypedDict):
+class _SpellLevels(TypedDict):
     _0:str 
     _1:str 
     _2:str 
@@ -215,11 +215,11 @@ class __SpellLevels(TypedDict):
 
 
 class Translations_2(TypedDict):
-    actions: __Actions
-    distance: __Distance
-    time: __Time
-    components: __Components
-    spell_levels: __SpellLevels
+    actions: _Actions
+    distance: _Distance
+    time: _Time
+    components: _Components
+    spell_levels: _SpellLevels
     
 
 
