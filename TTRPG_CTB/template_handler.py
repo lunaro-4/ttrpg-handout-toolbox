@@ -136,8 +136,10 @@ class TemplateHandler:
     def set_element_text(self, element_name: str, new_text: str) -> None:
         element: Tag | None = self.parsed_strings[element_name]
         if element:
-            markup = element.string = new_text.replace('\n', '<br>')
-            element.replace_with(BeautifulSoup(markup, "html.parser"))
+            markup = new_text.replace('\n', '<br>')
+            element.string = ''
+            beautified_string = BeautifulSoup(markup, "html.parser")
+            element.append(beautified_string)
         else:
             logging.warning(f'Element with name {element_name} is not found in template, skipping')
 
@@ -194,6 +196,7 @@ class TemplateHandler:
         files: list[str] = os.listdir(template_name)
         for file in files:
             os.symlink(f"../{template_name}/{file}", f'build/{file}', os.path.isdir(f'{template_name}/{file}'))
+        logger.info(os.listdir('build'))
                        
 
     def render_image(self) -> None:
