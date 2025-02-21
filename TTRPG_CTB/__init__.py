@@ -4,7 +4,6 @@ import json
 import logging
 
 logging.basicConfig(level=logging.ERROR)
-logger = logging.getLogger("TTRPG_CTB_logger")
 
 
 class SpellInput(TypedDict):
@@ -28,6 +27,7 @@ class SpellInput(TypedDict):
 
 class Spell:
 
+    logger = logging.getLogger("TTRPG_CTB_spell")
     class DURATION_CONSTATNS:
         ACTION = 4
         BONUS_ACTION = 2
@@ -50,6 +50,9 @@ class Spell:
         self.__archetypes: list[str] = kwargs['archetypes']
 
         self.__json: dict = dict(kwargs)
+
+    def set_logger_level(self, loglevel: Literal[0, 10, 20, 30, 40, 50]) -> None:
+        self.logger.setLevel(loglevel)
 
     @classmethod
     def load_from_json(cls, spell_path: str ) -> Self:
@@ -174,12 +177,15 @@ class Spell:
 class SpellDatabase:
     """ A class, responsible for holding and mass processing spell data.
     """
+
+    logger = logging.getLogger("TTRPG_CTB_SpellDatabase")
     def __init__(self, directory: str | None = None, loglevel: Literal[0, 10, 20, 30, 40, 50] | None = None) -> None:
         """
         directory(optional):    specify directory to automatically parse all spell json from
         """
         if loglevel:
-            logger.setLevel(loglevel)
+            self.logger.setLevel(loglevel)
+            Spell.logger.setLevel(loglevel)
         self.spells: list[Spell] = []
         if directory:
             self.load_spells_form_directory(directory)

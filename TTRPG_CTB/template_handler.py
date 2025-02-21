@@ -1,4 +1,4 @@
-from typing import Type
+from typing import Type, Literal
 from bs4 import BeautifulSoup, Tag
 from html2image import Html2Image #  type: ignore[import-untyped]
 import shutil
@@ -7,11 +7,11 @@ from .translations import Translations
 import logging
 
 
-logger = logging.getLogger("TTRPG_CTB_logger")
 
 
 
 class TemplateHandler:
+    logger = logging.getLogger("TTRPG_CTB_template_handler")
     screenshot_options: dict = {
             "html_file": 'build/html_outp/outp.html',
             }
@@ -51,7 +51,9 @@ class TemplateHandler:
             return list(self.__raw_dict.keys())
 
 
-    def __init__(self, template_name: str, Translations: Type[Translations] ) -> None:
+    def __init__(self, template_name: str, Translations: Type[Translations], loglevel: Literal[0, 10, 20, 30, 40, 50] | None = None) -> None:
+        if loglevel:
+            self.logger.setLevel(loglevel)
         self.soup: BeautifulSoup
         self.parsed_strings: TemplateHandler.ParsedStrings =  self.ParsedStrings()
         self.Translations = Translations
@@ -61,7 +63,7 @@ class TemplateHandler:
 
 
     def render(self, size: tuple[int, int], file_path: str, /, custom_css: str | None = None, clean_after_rendering: bool = True) -> None:
-        logger.info(f"rendering {file_path}")
+        self.logger.info(f"rendering {file_path}")
         self.screenshot_options['size'] = size
         self.screenshot_options['save_as'] = file_path
         self.clean_build()
@@ -72,34 +74,31 @@ class TemplateHandler:
             self.clean_build()
 
     def get_soup(self) -> None:
-        logger.info('getting soup')
+        self.logger.info('getting soup')
         with open(f'{self.template}/index.html') as html_file:
             content = html_file.read()
             self.soup = BeautifulSoup(content, features="html.parser")
 
 
     def translate_duration(self, duration_value: int, is_action: bool = False) -> str:
-        return_string: str = ''
         if is_action:
             if duration_value == 2:
-                return_string =  self.Translations.Actions.bonus_action
+                return self.Translations.Actions.bonus_action
             if duration_value == 4:
-                return_string =  self.Translations.Actions.action
+                return self.Translations.Actions.action
             if duration_value == 6:
-                return_string =  self.Translations.Actions.action + 'и' + self.Translations.Actions.bonus_action
+                return self.Translations.Actions.action + 'и' + self.Translations.Actions.bonus_action
         if duration_value%(3600*7*24) == 0:
-            return_string =  f'{int(duration_value/(3600*7*24))} {self.Translations.Time.week}'
+            return f'{int(duration_value/(3600*7*24))} {self.Translations.Time.week}'
         if duration_value%(3600*24) == 0:
-            return_string =  f'{int(duration_value/(3600*24))} {self.Translations.Time.day}'
+            return f'{int(duration_value/(3600*24))} {self.Translations.Time.day}'
         if duration_value%(3600) == 0:
-            return_string =  f'{int(duration_value/(3600))} {self.Translations.Time.hour}'
+            return f'{int(duration_value/(3600))} {self.Translations.Time.hour}'
         if duration_value%(60) == 0:
-            return_string =  f'{int(duration_value/(60))} {self.Translations.Time.minute}'
+            return f'{int(duration_value/(60))} {self.Translations.Time.minute}'
         if duration_value != -1:
-            return_string =  f'{int(duration_value)} {self.Translations.Time.second}'
-        return_string =  self.Translations.Time.other
-        logger.info(f'Translated {duration_value} to {return_string}')
-        return return_string
+            return f'{int(duration_value)} {self.Translations.Time.second}'
+        return self.Translations.Time.other
 
     def translate_distance(self, distance_value: int) -> str:
         return_string: str = ''
@@ -110,7 +109,7 @@ class TemplateHandler:
                 return_string =  self.Translations.Distance.on_touch
             case _:
                 return_string =  f'{distance_value} {self.Translations.Distance.ft}'
-        logger.info(f'Translated {distance_value} to {return_string}')
+        self.logger.info(f'Translated {distance_value} to {return_string}')
         return return_string
 
 
@@ -120,13 +119,13 @@ class TemplateHandler:
 
     def append_tag_to_element(self, element_name: str, new_tag: Tag) -> None:
         if element_name == self.CONSTANT_BOX_NAMES.description:
-            logger.error("Can't add element to description box, as it is a <p> tag. Please use 'set_element_text' instead")
+            self.logger.error("Can't add element to description box, as it is a <p> tag. Please use 'set_element_text' instead")
             raise Exception()
         element = self.parsed_strings[element_name]
         if element:
             element.append(new_tag)
         else:
-            logger.warning(f'Element with name {element_name} is not found in template, skipping')
+            self.logger.warning(f'Element with name {element_name} is not found in template, skipping')
 
     def append_picture(self, element_name: str,  relative_path: str) -> None:
         new_picture_element = self.soup.new_tag('img')
@@ -196,7 +195,7 @@ class TemplateHandler:
         files: list[str] = os.listdir(template_name)
         for file in files:
             os.symlink(f"../{template_name}/{file}", f'build/{file}', os.path.isdir(f'{template_name}/{file}'))
-        logger.info(os.listdir('build'))
+        self.logger.info(os.listdir('build'))
                        
 
     def render_image(self) -> None:
