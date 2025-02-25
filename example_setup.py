@@ -1,5 +1,6 @@
 from TTRPG_CTB.translations import Translations
 from TTRPG_CTB import Spell, template_handler
+from global_constants import RussianTranslations
 from typing import Literal, Type
 from PIL import Image
 import os
@@ -15,6 +16,8 @@ def render_spells_to_folder(folder: str,
                             size: tuple[int, int],
                             restrict_to: int | None = None,
                             custom_css: str | None = None,
+                            loglevel: Literal[0, 10, 20, 30, 40, 50] | None = None,
+                            add_pictures: bool | None = True,
                             ) -> None:
 
 
@@ -50,7 +53,7 @@ def render_spells_to_folder(folder: str,
 
     for spell in spells:
         print(f'Rendering spell {spell.get_name()}')
-        th = TemplateHandler(template_path, imported_translations)
+        th = TemplateHandler(template_path, imported_translations, loglevel)
         soup = th.soup
         th.set_element_text(th.CONSTANT_BOX_NAMES.spell_name, spell.get_name_translated())
         description_to_set: str = spell.get_description()
@@ -71,16 +74,34 @@ def render_spells_to_folder(folder: str,
         th.append_tag_to_element(th.CONSTANT_BOX_NAMES.spell_info, level_element)
 
         casting_time_value = spell.get_casting_time()
-        casting_time_set_picture(th, casting_time_value)
+        if add_pictures:
+            casting_time_set_picture(th, casting_time_value)
+        else:
+            casting_time_tag = soup.new_tag('p')
+            casting_time_tag.string = th.translate_duration(casting_time_value, is_action=True)
+            
+            th.append_tag_to_element(th.CONSTANT_BOX_NAMES.casting_time, casting_time_tag)
+
 
 
         is_ritual: bool = spell.get_is_ritual()
         if is_ritual:
-            th.append_picture(th.CONSTANT_BOX_NAMES.spell_info, 'src/ritual.png')
+            if add_pictures:
+                th.append_picture(th.CONSTANT_BOX_NAMES.spell_info, 'src/ritual.png')
+            else:
+                text_to_add = soup.new_tag('p')
+                text_to_add.string = ', Ритуал'
+                th.append_tag_to_element(th.CONSTANT_BOX_NAMES.spell_info, text_to_add)
+
 
         requires_concentration: bool = spell.get_requires_concentration()
         if requires_concentration:
-            th.append_picture(th.CONSTANT_BOX_NAMES.spell_info, 'src/concentration.png')
+            if add_pictures:
+                th.append_picture(th.CONSTANT_BOX_NAMES.spell_info, 'src/concentration.png')
+            else:
+                text_to_add = soup.new_tag('p')
+                text_to_add.string = ', Концентрация'
+                th.append_tag_to_element(th.CONSTANT_BOX_NAMES.spell_info, text_to_add)
 
 
 
