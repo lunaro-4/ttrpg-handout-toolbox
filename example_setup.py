@@ -1,5 +1,5 @@
-from TTRPG_CTB.translations import Translations
-from TTRPG_CTB import Spell, template_handler
+from TTRPG_HTB.translations import Translations
+from TTRPG_HTB import Spell, template_handler
 from global_constants import RussianTranslations
 from typing import Literal, Type
 from PIL import Image
