@@ -135,11 +135,12 @@ class Translations_1(ABC):
             9: "",
             }
 
-class Translations(type):
+class AbstractTranslations(type):
 
     class Actions(ABC):
         bonus_action: str
         action: str
+        reaction: str
         other: str
     class Time(ABC):
         hour: str
@@ -175,6 +176,48 @@ class Translations(type):
             7: "",
             8: "",
             9: "",
+            }
+
+class Translations(AbstractTranslations):
+    class Actions(AbstractTranslations.Actions):
+        bonus_action: str = "Bonus action"
+        action: str = "Action"
+        reaction: str = "Reaction"
+        other: str = "Other"
+    class Time(AbstractTranslations.Time):
+        hour: str = "hours"
+        minute: str = "minutes"
+        second: str = "seconds"
+        day: str = "days"
+        week: str = "weeks"
+        month: str  = "month"
+        other: str  = "Other"
+    class Distance(AbstractTranslations.Distance):
+        on_self: str = "On self"
+        on_touch: str = "On touch"
+        ft:str = "ft"
+        other: str = "Other"
+
+    # class SpellLevels:
+    #     cantrip: str = "Заговор"
+    #     leveled_spell_level: str = "Уровень"
+    class Components(AbstractTranslations.Components):
+        verbal: str = 'V'
+        somatic: str = 'S'
+        material: str = 'M'
+        material_component_text: str = 'Material component'
+
+    SPELL_LEVELS: dict[int, str]= {
+            0: "Cantrip",
+            1: "Level I",
+            2: "Level II",
+            3: "Level III",
+            4: "Level IV",
+            5: "Level V",
+            6: "Level VI",
+            7: "Level VII",
+            8: "Level VIII",
+            9: "Level IX",
             }
 
 
