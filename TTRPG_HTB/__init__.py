@@ -1,9 +1,10 @@
 from typing import Literal, Self, TypedDict, Unpack
 import os
 import json
+from json import JSONDecodeError
 import logging
 
-logging.basicConfig(level=logging.ERROR)
+logging.basicConfig(level=logging.ERROR, format='%(levelname)s:\t%(name)s at %(relativeCreated)d ms\t -- %(message)s')
 
 
 class SpellInput(TypedDict):
@@ -51,22 +52,23 @@ class Spell:
 
         self.__json: dict = dict(kwargs)
 
-    def set_logger_level(self, loglevel: Literal[0, 10, 20, 30, 40, 50]) -> None:
-        self.logger.setLevel(loglevel)
+    @staticmethod
+    def set_logger_level(loglevel: Literal[0, 10, 20, 30, 40, 50]) -> None:
+        Spell.logger.setLevel(loglevel)
 
     @classmethod
     def load_from_json(cls, spell_path: str ) -> Self:
         """
-        example of valid json is provied with static metod 'get_valid_json_example()'
+        example of valid json is provided with static method 'get_valid_json_example()'
         """
         loaded_data: dict = {}
         if not spell_path[-4:] == "json":
             logging.error(f'{spell_path} is not a json')
-            raise Exception
+            raise ValueError
         with open(spell_path, 'r') as f:
             try:
                 loaded_data =  json.load(f, strict=False)
-            except Exception as e:
+            except JSONDecodeError as e:
                 logging.error(spell_path)
                 raise e
 
@@ -191,8 +193,8 @@ class SpellDatabase:
         directory(optional):    specify directory to automatically parse all spell json from
         """
         if loglevel:
-            self.logger.setLevel(loglevel)
-            Spell.logger.setLevel(loglevel)
+            SpellDatabase.logger.setLevel(loglevel)
+            Spell.set_logger_level(loglevel)
         self.spells: list[Spell] = []
         """ A list, containing all the spells, loaded into library"""
         if directory:
@@ -206,20 +208,30 @@ class SpellDatabase:
             populate_levels_maps()
         """
         if not self.spells:
-            logging.error('No spells loaded, aborting!')
+            self.logger.error('No spells loaded, aborting!')
+            raise ValueError
         self.map_names_to_spells(parse_english_names=True)
         self.populate_classes_maps()
         self.populate_levels_maps()
         pass
 
     def load_spell_from_json(self, path_to_file: str) -> None:
-        new_spell = Spell.load_from_json(path_to_file)
-        self.spells.append(new_spell)
         """
         Attempts to load spell, using Spell.load_from_json() method
 
         On success, adds it to 'spells' dictionary
         """
+        try:
+            new_spell = Spell.load_from_json(path_to_file)
+            self.spells.append(new_spell)
+        except JSONDecodeError:
+            self.logger.error(f'Failed to load spell from {path_to_file}, skipping')
+        except ValueError as e:
+            self.logger.error(f'Attempt to load spell from non-json file: {path_to_file}')
+            raise e
+        except Exception as e:
+            raise e
+
     def load_spells_form_directory(self, path_to_directory: str) -> None:
         """
         A method, that scans directory for .json files and applies 'load_spell_from_json()' on each.
@@ -227,7 +239,7 @@ class SpellDatabase:
         It is not recursive, and in complex projects you might want to use 'load_spell_from_json()' directly
         """
         files: list[str] = os.listdir(path_to_directory)
-        logging.info(f'found {len(files)} files in {path_to_directory}')
+        self.logger.info(f'found {len(files)} files in {path_to_directory}')
         for file in files:
             if not file[-4:] == "json":
                 logging.warning(f'{file} is not a json, skipping')

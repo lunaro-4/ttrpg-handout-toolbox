@@ -53,7 +53,8 @@ def render_spells_to_folder(folder: str,
 
     for spell in spells:
         print(f'Rendering spell {spell.get_name()}')
-        th = TemplateHandler(template_path, imported_translations, loglevel)
+        th = TemplateHandler(template_path, imported_translations)
+        TemplateHandler.set_log_level(10)
         soup = th.soup
         th.set_element_text(th.CONSTANT_BOX_NAMES.spell_name, spell.get_name_translated())
         description_to_set: str = spell.get_description()

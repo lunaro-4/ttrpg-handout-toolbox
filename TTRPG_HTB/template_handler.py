@@ -15,6 +15,11 @@ class TemplateHandler:
     screenshot_options: dict = {
             "html_file": 'build/html_outp/outp.html',
             }
+    
+    @staticmethod
+    def set_log_level( loglevel: Literal[0, 10, 20, 30, 40, 50]) -> None:
+        TemplateHandler.logger.setLevel(loglevel)
+
     class CONSTANT_BOX_NAMES:
         components: str = "components"
         casting_time: str = "casting-time"
@@ -51,9 +56,7 @@ class TemplateHandler:
             return list(self.__raw_dict.keys())
 
 
-    def __init__(self, template_name: str, Translations: Type[Translations], loglevel: Literal[0, 10, 20, 30, 40, 50] | None = None) -> None:
-        if loglevel:
-            self.logger.setLevel(loglevel)
+    def __init__(self, template_name: str, Translations: Type[Translations] ) -> None:
         self.soup: BeautifulSoup
         self.parsed_strings: TemplateHandler.ParsedStrings =  self.ParsedStrings()
         self.Translations = Translations
@@ -195,7 +198,6 @@ class TemplateHandler:
         files: list[str] = os.listdir(template_name)
         for file in files:
             os.symlink(f"../{template_name}/{file}", f'build/{file}', os.path.isdir(f'{template_name}/{file}'))
-        self.logger.info(os.listdir('build'))
                        
 
     def render_image(self) -> None:
