@@ -4,7 +4,7 @@ from typing import Any
 import os
 import requests
 from abc import ABC, abstractmethod
-from TTRPG_CTB import Spell
+from TTRPG_HTB import Spell
 import ast
 from bs4 import BeautifulSoup
 from global_constants import CLASS_SUBCLASS_MAP

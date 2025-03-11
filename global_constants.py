@@ -1,4 +1,4 @@
-from TTRPG_CTB.translations import Translations, Translations_1
+from TTRPG_HTB.translations import Translations, Translations_1
 
 class CLASS_SUBCLASS_MAP:  
     druid_class_name: str = 'druid'
